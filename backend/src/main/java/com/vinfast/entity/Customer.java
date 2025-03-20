@@ -22,6 +22,8 @@ public class Customer {
     private String email;
     private String address;
     private Date createdAt;
+    private String role;
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Order> orders;
+
 }
