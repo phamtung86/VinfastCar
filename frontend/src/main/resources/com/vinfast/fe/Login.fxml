@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.LoginController">
+   <right>
+      <VBox prefWidth="340.0" styleClass="vbox_background_right" stylesheets="@style/Login.css" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="340.0">
+               <children>
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitLogin" prefHeight="26.0" prefWidth="31.0" style="-fx-background-color: #000000; -fx-background-radius: 10px 0px 0px 10px;" styleClass="exitButton" stylesheets="@style/Login.css" text="X" textFill="#efeaea" />
+               </children>
+            </HBox>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="340.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login" textAlignment="CENTER" wrappingWidth="203.92578887939453">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                  </Text>
+               </children></VBox>
+            <HBox alignment="CENTER" prefHeight="68.0" prefWidth="340.0">
+               <children>
+                  <TextField fx:id="usernameField" cache="true" prefHeight="32.0" prefWidth="250.0" promptText="Username" style="-fx-background-color: transparent; -fx-border-width: 0px 0px 2px 0px; -fx-border-color: #000000;" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="57.0" prefWidth="340.0" style="-fx-background-color: transparent;">
+               <children>
+                  <PasswordField fx:id="passwordField" prefHeight="32.0" prefWidth="250.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #000000; -fx-border-width: 0px 0px 2px 0px;" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="43.0" prefWidth="340.0">
+               <children>
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefHeight="31.0" prefWidth="103.0" style="-fx-background-color: #000000; -fx-background-radius: 20px;" styleClass="loginButton" stylesheets="@style/Login.css" text="Login" textFill="WHITE" />
+               </children></HBox>
+            <HBox alignment="CENTER" prefHeight="73.0" prefWidth="340.0">
+               <children>
+                  <Label fx:id="notificationLabel" alignment="CENTER" prefHeight="35.0" prefWidth="298.0" textAlignment="JUSTIFY">
+                     <font>
+                        <Font name="System Bold Italic" size="12.0" />
+                     </font></Label>
+               </children></HBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></VBox>
+   </right>
+   <center>
+      <VBox prefWidth="450.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="462.0" fitWidth="560.0" pickOnBounds="true">
+               <image>
+                  <Image url="@image/6556d8c781fc1_1700190407.jpg" />
+               </image></ImageView>
+         </children></VBox>
+   </center>
+</BorderPane>
