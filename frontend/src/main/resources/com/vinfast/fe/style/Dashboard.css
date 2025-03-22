@@ -1,0 +1,57 @@
+.search-container{
+    -fx-border-color:#6F6F6F;
+    -fx-border-radius:30;
+}
+.transparent{
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.choice-box .menu-item {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-color:#6F6F6F;
+    -fx-border-radius:20px;
+    -fx-background-radius:20px;
+    -fx-background-color:white;
+    -fx-text-fill: black;
+}
+
+/* Khi rê chuột vào một mục */
+.choice-box .menu-item:hover {
+    -fx-background-color: #DCDCDC;
+}
+
+/* Khi chọn một mục */
+.choice-box .menu-item:focused {
+
+    -fx-background-color: #454545;
+}
+.choice-box .context-menu{
+    -fx-background-radius:20px;
+    -fx-translate-x: -10px;
+    -fx-background-color: rgba(0,0,0,0);
+}
+.lableItems:hover {
+    -fx-scale-x: 1.1;  /* Phóng to theo chiều ngang */
+    -fx-scale-y: 1.1;  /* Phóng to theo chiều dọc */
+    -fx-font-weight: bold;  /* In đậm chữ */
+    -fx-transition: all 0.3s ease-in-out;
+}
+.card{
+    -fx-background-color:#fff;
+    -fx-background-radius:10;
+}
+.card2{
+    -fx-background-color:#AFEEEE;
+    -fx-background-radius:10;
+}
+.card3{
+    -fx-background-color:#D8BFD8;
+    -fx-background-radius:10;
+}
+.rounded-image {
+    -fx-background-radius: 50;  /* Bo tròn góc */
+    -fx-border-radius: 50;      /* Bo tròn viền */
+    -fx-border-color: white;    /* Viền trắng (có thể thay đổi) */
+    -fx-border-width: 3px;      /* Độ dày viền */
+    -fx-padding: 3px;           /* Tạo khoảng cách giữa ảnh và viền */
+}
