@@ -43,6 +43,8 @@ public class Car {
 
     private String driveTrain;
 
+    private long price;
+
     @OneToMany(mappedBy = "car")
     private List<Inventory> inventory;
 
