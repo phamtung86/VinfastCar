@@ -5,20 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ea7ea92d-34dd-40ae-b040-08219f166ed4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/com/vinfast/fe/Login.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/breakdown.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/call-center.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/customers.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/dashboard.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/data-analysis.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/exit.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/search.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/user.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/warehouse.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/VinFastCarManagement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VinFastCarManagement.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/vinfast/fe/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/vinfast/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/Login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/vinfast/fe/image/6556d8c781fc1_1700190407.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +28,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -48,44 +43,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Application.HelloApplication.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.Application.executor": "Run",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "M:/Hoc_Ki_VI/JAVA NC/VinFastCarManagement/backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "configurable.group.editor",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Application.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;PT&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;M:/Hoc_Ki_VI/JAVA NC/VinFastCarManagement/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.28390804&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="M:\Hoc_Ki_VI\JAVA NC\VinFastCarManagement\backend\src\main\java\com\vinfast" />
       <recent name="M:\Hoc_Ki_VI\JAVA NC\VinFastCarManagement\backend\src\main\java\com\vinfast\controller" />
       <recent name="M:\Hoc_Ki_VI\JAVA NC\VinFastCarManagement\backend\src\main\java\com\vinfast\config" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="M:\Hoc_Ki_VI\JAVA NC\VinFastCarManagement\frontend\src\main\java\com\vinfast" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.HelloApplication">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.vinfast.fe.HelloApplication" />
-      <module name="FE" />
+      <module name="VinFastCarManagement" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.vinfast.fe.*" />
@@ -133,6 +131,9 @@
       <workItem from="1742444192269" duration="146000" />
       <workItem from="1742445185671" duration="37000" />
       <workItem from="1742445367966" duration="82000" />
+      <workItem from="1743137524283" duration="192000" />
+      <workItem from="1743137729611" duration="486000" />
+      <workItem from="1743138265984" duration="55000" />
     </task>
     <servers />
   </component>
