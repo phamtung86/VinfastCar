@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -19,35 +17,37 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String model;
+    private String name;
 
     private int year;
 
-    private int odo;
-
-    @Column(name = "`condition`")
-    private String condition;
-
-    private BigDecimal price;
-
     private String status;
 
-    private String description;
+    private double odo;
 
-    private String imageUrl;
+    private String original;
 
-    private Date createdAt;
+    private String style;
 
-    private Date updatedAt;
+    private String gear;
+
+    private String engine;
+
+    private String colorOut;
+
+    private String colorIn;
+
+    private int slotSeats;
+
+    private int slotDoor;
+
+    private String driveTrain;
 
     @OneToMany(mappedBy = "car")
     private List<Inventory> inventory;
 
-    @ManyToOne
-    @JoinColumn(name = "brand_id", referencedColumnName = "id")
-    private Brand brand;
-//
-//    @OneToMany(mappedBy = "car")
-//    private List<Order> orders;
+    @OneToMany(mappedBy = "car")
+    private List<Library> libraries;
+
 }
 

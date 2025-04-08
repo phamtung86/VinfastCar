@@ -15,11 +15,11 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowCredentials(true); // Bắt buộc để gửi Cookie
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // Cho phép frontend
-        config.setAllowedHeaders(List.of("*")); // Cho phép tất cả headers
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Các method cho phép
-        config.addExposedHeader("Authorization"); // Expose Authorization header
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.addExposedHeader("Authorization");
         config.addExposedHeader("Set-Cookie");
 
         source.registerCorsConfiguration("/**", config);

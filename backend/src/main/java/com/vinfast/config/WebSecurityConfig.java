@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration 
 @EnableWebSecurity
@@ -36,17 +42,31 @@ public class WebSecurityConfig {
          .csrf(AbstractHttpConfigurer::disable)
          .authorizeHttpRequests(request -> request.requestMatchers("/login").permitAll()
          .anyRequest().authenticated())
-         // Send a 401 error response if user is not authentic.		 
+
          .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
-         // no session management
+
          .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
-         // filter the request and add authentication token		 
+
          .addFilterBefore(filter,  UsernamePasswordAuthenticationFilter.class)
          .build();
    }
 
    @Bean
-   AuthenticationManager customAuthenticationManager() {
-      return authentication -> new UsernamePasswordAuthenticationToken("randomuser123","password");
+   public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+      return authenticationConfiguration.getAuthenticationManager();
+   }
+
+   @Bean
+   public CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration configuration = new CorsConfiguration();
+      configuration.setAllowCredentials(true);
+      configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+      configuration.setAllowedHeaders(List.of("*"));
+      configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+      configuration.addExposedHeader("Authorization");
+      configuration.addExposedHeader("Set-Cookie");
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", configuration);
+      return source;
    }
 }
