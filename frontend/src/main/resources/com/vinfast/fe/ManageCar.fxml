@@ -4,36 +4,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="602.0" stylesheets="@style/ManageCar.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TitledPane animated="false" layoutX="4.0" prefHeight="393.0" prefWidth="594.0" text="Quản Lý Xe Cũ" wrapText="true">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <MenuBar layoutX="36.0" layoutY="21.0" prefHeight="21.0" prefWidth="237.0">
-                    <menus>
-                      <Menu mnemonicParsing="false" text="File">
-                        <items>
-                          <MenuItem mnemonicParsing="false" text="Close" />
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Edit">
-                        <items>
-                          <MenuItem mnemonicParsing="false" text="Delete" />
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Help">
-                        <items>
-                          <MenuItem mnemonicParsing="false" text="About" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-               </children></AnchorPane>
-        </content>
-         <font>
-            <Font name="Arial Bold" size="19.0" />
-         </font>
-      </TitledPane>
+      <VBox prefHeight="200.0" prefWidth="607.0">
+         <children>
+            <TextField alignment="CENTER" prefHeight="25.0" prefWidth="325.0" style="-fx-border-radius: 10; -fx-padding: 5;" text="Quản Lý Xe">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </TextField>
+            <TableView prefHeight="361.0" prefWidth="602.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="ID" />
+                <TableColumn prefWidth="75.0" text="Tên" />
+                  <TableColumn prefWidth="75.0" text="Ảnh" />
+                  <TableColumn prefWidth="75.0" text="Odo" />
+                  <TableColumn prefWidth="75.0" text="Năm" />
+                  <TableColumn prefWidth="75.0" text="Hộp số" />
+                  <TableColumn prefWidth="75.0" text="C1" />
+                  <TableColumn prefWidth="75.0" text="C1" />
+              </columns>
+            </TableView>
+         </children></VBox>
    </children>
-</Pane>
+</HBox>
