@@ -4,27 +4,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="392.0" prefWidth="602.0" stylesheets="@style/ManageCar.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:controller="com.vinfast.controller.ManageCarController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="943.0" style="-fx-background-color: red;" stylesheets="@style/ManageCar.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="200.0" prefWidth="607.0">
+      <VBox prefHeight="200.0" prefWidth="607.0" HBox.hgrow="ALWAYS">
          <children>
             <TextField alignment="CENTER" prefHeight="25.0" prefWidth="325.0" style="-fx-border-radius: 10; -fx-padding: 5;" text="Quản Lý Xe">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </TextField>
-            <TableView prefHeight="361.0" prefWidth="602.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="ID" />
-                <TableColumn prefWidth="75.0" text="Tên" />
-                  <TableColumn prefWidth="75.0" text="Ảnh" />
-                  <TableColumn prefWidth="75.0" text="Odo" />
-                  <TableColumn prefWidth="75.0" text="Năm" />
-                  <TableColumn prefWidth="75.0" text="Hộp số" />
-                  <TableColumn prefWidth="75.0" text="C1" />
-                  <TableColumn prefWidth="75.0" text="C1" />
-              </columns>
-            </TableView>
+             <TableView fx:id="carTable" prefHeight="355.0" prefWidth="668.0" VBox.vgrow="ALWAYS">
+                 <columns>
+                     <TableColumn fx:id="idCol" prefWidth="43.0" text="ID" />
+                     <TableColumn fx:id="nameCol" prefWidth="107.0" text="Tên" />
+                     <TableColumn fx:id="imageCol" prefWidth="108.0" text="Ảnh" />
+                     <TableColumn fx:id="odoCol" prefWidth="75.0" text="Odo" />
+                     <TableColumn fx:id="yearCol" prefWidth="59.0" text="Năm" />
+                     <TableColumn fx:id="gearCol" prefWidth="99.0" text="Hộp số" />
+                     <TableColumn fx:id="originalCol" prefWidth="94.0" text="Xuất xứ" />
+                     <TableColumn fx:id="priceCol" prefWidth="152.0" text="Giá" />
+                     <TableColumn fx:id="statusCol" prefWidth="85.0" text="Trạng thái" />
+                     <TableColumn fx:id="engineCol" prefWidth="119.0" text="Động cơ" />
+                 </columns>
+             </TableView>
          </children></VBox>
    </children>
 </HBox>

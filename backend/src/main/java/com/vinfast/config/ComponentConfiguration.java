@@ -11,6 +11,7 @@ public class ComponentConfiguration {
 
 	@Bean
 	public ModelMapper initModelMapper() {
+
 		return new ModelMapper();
 	}
 	@Bean
