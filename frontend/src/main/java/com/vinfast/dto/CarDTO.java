@@ -1,67 +1,55 @@
-package com.vinfast.entity;
+package com.vinfast.dto;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-@Entity
-@Table(name = "cars")
+public class CarDTO {
 
-public class Car {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String name;
-
     private int year;
-
     private String status;
-
     private double odo;
-
     private String original;
-
     private String style;
-
     private String gear;
-
     private String engine;
-
     private String colorOut;
-
     private String colorIn;
-
     private int slotSeats;
-
     private int slotDoor;
-
     private String driveTrain;
-
     private long price;
+    private String carStatus;
+    private List<InventoryDTO> inventories;
+    private List<LibraryDTO> libraries;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "car_status")
-    private CarStatus carStatus;
-
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Inventory> inventories;
-
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Library> libraries;
-
-    public Car() {
+    // Constructor mặc định, Jackson yêu cầu constructor này
+    public CarDTO() {
     }
 
-    public Car(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, CarStatus carStatus, List<Inventory> inventories, List<Library> libraries) {
+    // Constructor có tham số, Jackson sẽ sử dụng constructor này khi deserializing
+    @JsonCreator
+    public CarDTO(
+            @JsonProperty("id") Integer id,
+            @JsonProperty("name") String name,
+            @JsonProperty("year") int year,
+            @JsonProperty("status") String status,
+            @JsonProperty("odo") double odo,
+            @JsonProperty("original") String original,
+            @JsonProperty("style") String style,
+            @JsonProperty("gear") String gear,
+            @JsonProperty("engine") String engine,
+            @JsonProperty("colorOut") String colorOut,
+            @JsonProperty("colorIn") String colorIn,
+            @JsonProperty("slotSeats") int slotSeats,
+            @JsonProperty("slotDoor") int slotDoor,
+            @JsonProperty("driveTrain") String driveTrain,
+            @JsonProperty("price") long price,
+            @JsonProperty("inventories") List<InventoryDTO> inventories,
+            @JsonProperty("libraries") List<LibraryDTO> libraries) {
+
         this.id = id;
         this.name = name;
         this.year = year;
@@ -77,11 +65,11 @@ public class Car {
         this.slotDoor = slotDoor;
         this.driveTrain = driveTrain;
         this.price = price;
-        this.carStatus = carStatus;
         this.inventories = inventories;
         this.libraries = libraries;
     }
 
+    // Getter và Setter cho tất cả các trường
     public Integer getId() {
         return id;
     }
@@ -202,35 +190,27 @@ public class Car {
         this.price = price;
     }
 
-    public List<Inventory> getInventories() {
-        return inventories;
-    }
-
-    public void setInventories(List<Inventory> inventories) {
-        this.inventories = inventories;
-    }
-
-    public List<Library> getLibraries() {
-        return libraries;
-    }
-
-    public void setLibraries(List<Library> libraries) {
-        this.libraries = libraries;
-    }
-
-    public CarStatus getCarStatus() {
+    public String getCarStatus() {
         return carStatus;
     }
 
-    public void setCarStatus(CarStatus carStatus) {
+    public void setCarStatus(String carStatus) {
         this.carStatus = carStatus;
     }
 
-    public enum CarStatus {
-        AVAILABLE,   // Xe đang có sẵn để bán
-        RESERVED,    // Đã có người đặt cọc
-        SOLD,        // Đã bán
-        DELIVERED    // Đã giao xe cho khách
+    public List<InventoryDTO> getInventories() {
+        return inventories;
+    }
+
+    public void setInventories(List<InventoryDTO> inventories) {
+        this.inventories = inventories;
+    }
+
+    public List<LibraryDTO> getLibraries() {
+        return libraries;
+    }
+
+    public void setLibraries(List<LibraryDTO> libraries) {
+        this.libraries = libraries;
     }
 }
-

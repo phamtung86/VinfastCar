@@ -41,7 +41,8 @@ public class WebSecurityConfig {
       return http
          .csrf(AbstractHttpConfigurer::disable)
          .authorizeHttpRequests(request -> request.requestMatchers("/login").permitAll()
-         .anyRequest().authenticated())
+         .anyRequest().permitAll()
+         )
 
          .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
 
@@ -56,17 +57,5 @@ public class WebSecurityConfig {
       return authenticationConfiguration.getAuthenticationManager();
    }
 
-   @Bean
-   public CorsConfigurationSource corsConfigurationSource() {
-      CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowCredentials(true);
-      configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-      configuration.setAllowedHeaders(List.of("*"));
-      configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      configuration.addExposedHeader("Authorization");
-      configuration.addExposedHeader("Set-Cookie");
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      source.registerCorsConfiguration("/**", configuration);
-      return source;
-   }
+
 }

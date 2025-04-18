@@ -1,33 +1,27 @@
-package com.vinfast.entity;
+package com.vinfast.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "library")
-public class Library {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class LibraryDTO {
+
     private int id;
 
     private String urlLink;
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id", referencedColumnName = "id")
-    private Car car;
+    private Integer carId;
 
-    public Library() {
+    public LibraryDTO() {
     }
 
-    public Library(int id, String urlLink, String title, Car car) {
+    public LibraryDTO(int id, String urlLink, String title, Integer carId) {
         this.id = id;
         this.urlLink = urlLink;
         this.title = title;
-        this.car = car;
+        this.carId = carId;
     }
 
     public int getId() {
@@ -54,11 +48,11 @@ public class Library {
         this.title = title;
     }
 
-    public Car getCar() {
-        return car;
+    public Integer getCarId() {
+        return carId;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
+    public void setCarId(Integer carId) {
+        this.carId = carId;
     }
 }
