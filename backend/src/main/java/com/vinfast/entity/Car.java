@@ -1,10 +1,6 @@
 package com.vinfast.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -52,16 +48,16 @@ public class Car {
 
     @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
-    private List<Inventory> inventories;
-
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
     private List<Library> libraries;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "id")
+    private Inventory inventory;
 
     public Car() {
     }
 
-    public Car(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, CarStatus carStatus, List<Inventory> inventories, List<Library> libraries) {
+    public Car(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, CarStatus carStatus, List<Library> libraries, Inventory inventory) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -78,8 +74,8 @@ public class Car {
         this.driveTrain = driveTrain;
         this.price = price;
         this.carStatus = carStatus;
-        this.inventories = inventories;
         this.libraries = libraries;
+        this.inventory = inventory;
     }
 
     public Integer getId() {
@@ -202,14 +198,6 @@ public class Car {
         this.price = price;
     }
 
-    public List<Inventory> getInventories() {
-        return inventories;
-    }
-
-    public void setInventories(List<Inventory> inventories) {
-        this.inventories = inventories;
-    }
-
     public List<Library> getLibraries() {
         return libraries;
     }
@@ -224,6 +212,14 @@ public class Car {
 
     public void setCarStatus(CarStatus carStatus) {
         this.carStatus = carStatus;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public enum CarStatus {

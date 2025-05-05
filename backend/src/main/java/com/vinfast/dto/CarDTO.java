@@ -41,14 +41,16 @@ public class CarDTO {
 
     private Car.CarStatus carStatus;
 
-    private List<InventoryDTO> inventories;
+    private Integer inventoryId;
+
+    private String inventoryName;
 
     private  List<LibraryDTO> libraries;
 
     public CarDTO() {
     }
 
-    public CarDTO(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, Car.CarStatus carStatus, List<InventoryDTO> inventories, List<LibraryDTO> libraries) {
+    public CarDTO(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, Car.CarStatus carStatus, Integer inventoryId, String inventoryName, List<LibraryDTO> libraries) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -65,7 +67,8 @@ public class CarDTO {
         this.driveTrain = driveTrain;
         this.price = price;
         this.carStatus = carStatus;
-        this.inventories = inventories;
+        this.inventoryId = inventoryId;
+        this.inventoryName = inventoryName;
         this.libraries = libraries;
     }
 
@@ -189,12 +192,20 @@ public class CarDTO {
         this.price = price;
     }
 
-    public List<InventoryDTO> getInventories() {
-        return inventories;
+    public Integer getInventoryId() {
+        return inventoryId;
     }
 
-    public void setInventories(List<InventoryDTO> inventories) {
-        this.inventories = inventories;
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
+    public String getInventoryName() {
+        return inventoryName;
+    }
+
+    public void setInventoryName(String inventoryName) {
+        this.inventoryName = inventoryName;
     }
 
     public List<LibraryDTO> getLibraries() {

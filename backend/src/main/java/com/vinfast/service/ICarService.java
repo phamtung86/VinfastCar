@@ -10,4 +10,10 @@ public interface ICarService {
     List<CarDTO> getAllCars();
 
     List<CarDTO> findCarsByCarStatus(Car.CarStatus carStatus);
+
+    List<CarDTO> searchCarsByName(String name);
+
+    boolean deleteCarById(int id);
+
+    CarDTO getCarById(int id);
 }

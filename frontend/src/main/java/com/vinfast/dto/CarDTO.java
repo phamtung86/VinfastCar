@@ -22,14 +22,14 @@ public class CarDTO {
     private String driveTrain;
     private long price;
     private String carStatus;
-    private List<InventoryDTO> inventories;
+    private Integer inventoryId;
+
+    private String inventoryName;
     private List<LibraryDTO> libraries;
 
-    // Constructor mặc định, Jackson yêu cầu constructor này
     public CarDTO() {
     }
 
-    // Constructor có tham số, Jackson sẽ sử dụng constructor này khi deserializing
     @JsonCreator
     public CarDTO(
             @JsonProperty("id") Integer id,
@@ -47,7 +47,8 @@ public class CarDTO {
             @JsonProperty("slotDoor") int slotDoor,
             @JsonProperty("driveTrain") String driveTrain,
             @JsonProperty("price") long price,
-            @JsonProperty("inventories") List<InventoryDTO> inventories,
+            @JsonProperty("inventoryId") Integer inventoryId,
+            @JsonProperty("inventoryName") String inventoryName,
             @JsonProperty("libraries") List<LibraryDTO> libraries) {
 
         this.id = id;
@@ -65,7 +66,8 @@ public class CarDTO {
         this.slotDoor = slotDoor;
         this.driveTrain = driveTrain;
         this.price = price;
-        this.inventories = inventories;
+        this.inventoryId = inventoryId;
+        this.inventoryName = inventoryName;
         this.libraries = libraries;
     }
 
@@ -198,12 +200,20 @@ public class CarDTO {
         this.carStatus = carStatus;
     }
 
-    public List<InventoryDTO> getInventories() {
-        return inventories;
+    public Integer getInventoryId() {
+        return inventoryId;
     }
 
-    public void setInventories(List<InventoryDTO> inventories) {
-        this.inventories = inventories;
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
+    public String getInventoryName() {
+        return inventoryName;
+    }
+
+    public void setInventoryName(String inventoryName) {
+        this.inventoryName = inventoryName;
     }
 
     public List<LibraryDTO> getLibraries() {
