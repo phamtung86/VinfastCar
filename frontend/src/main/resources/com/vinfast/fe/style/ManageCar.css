@@ -1,4 +1,25 @@
 .manage-car-header{
     -fx-background-color: #2686ea;
+}
+.manage-car-header-text{
+    -fx-background-color: transparent;
     -fx-text-fill: white;
+}
+.btn-add{
+    -fx-cursor: HAND;
+    -fx-background-color: #07bc07;
+}
+
+
+.btn-modify{
+    -fx-background-color: #edc72c;
+    -fx-cursor: HAND;
+}
+.btn-delete{
+    -fx-background-color: red;
+    -fx-cursor: HAND;
+}
+.btn-search{
+    -fx-background-color: #4fb3f1;
+    -fx-cursor: HAND;
 }

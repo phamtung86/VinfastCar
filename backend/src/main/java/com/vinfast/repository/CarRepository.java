@@ -14,5 +14,7 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
     @Query("SELECT c FROM Car c WHERE c.carStatus = :status")
     List<Car> findByCarStatus(@Param("status") Car.CarStatus carStatus);
 
+    List<Car> findByNameContainingIgnoreCase(String name);
+
 
 }

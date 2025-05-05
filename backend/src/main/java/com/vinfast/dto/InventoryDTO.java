@@ -1,22 +1,22 @@
 package com.vinfast.dto;
 
+import java.util.List;
+
 public class InventoryDTO {
 
     private Long id;
-    private Long carId;
-    private String carName;
-    private int quantity;
+    private int Capacity;
     private String location;
+    private List<CarDTO> cars;
 
     public InventoryDTO() {
     }
 
-    public InventoryDTO(Long id, Long carId, String carName, int quantity, String location) {
+    public InventoryDTO(Long id, int capacity, String location, List<CarDTO> cars) {
         this.id = id;
-        this.carId = carId;
-        this.carName = carName;
-        this.quantity = quantity;
+        Capacity = capacity;
         this.location = location;
+        this.cars = cars;
     }
 
     public Long getId() {
@@ -27,35 +27,27 @@ public class InventoryDTO {
         this.id = id;
     }
 
-    public Long getCarId() {
-        return carId;
-    }
-
-    public void setCarId(Long carId) {
-        this.carId = carId;
-    }
-
-    public String getCarName() {
-        return carName;
-    }
-
-    public void setCarName(String carName) {
-        this.carName = carName;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getLocation() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getCapacity() {
+        return Capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        Capacity = capacity;
+    }
+
+    public List<CarDTO> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<CarDTO> cars) {
+        this.cars = cars;
     }
 }

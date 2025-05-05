@@ -30,5 +30,29 @@ public class CarService implements ICarService{
         return modelMapper.map(cars, new TypeToken<List<CarDTO>>(){}.getType());
     }
 
+    @Override
+    public List<CarDTO> searchCarsByName(String name) {
+        List<Car> cars = carRepository.findByNameContainingIgnoreCase(name);
+        List<CarDTO> carDTOS = modelMapper.map(cars, new TypeToken<List<CarDTO>>(){}.getType());
+        return carDTOS;
+    }
+
+    @Override
+    public boolean deleteCarById(int id) {
+        if (carRepository.existsById(id)) {
+            carRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public CarDTO getCarById(int id) {
+        Car car = carRepository.findById(id).orElse(null);
+        if(car != null) {
+            return modelMapper.map(car, new TypeToken<CarDTO>(){}.getType());
+        }
+        return null;
+    }
 
 }
