@@ -1,12 +1,10 @@
-package com.vinfast.dto;
+package com.vinfast.form;
 
-import com.vinfast.entity.Car;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public class CarDTO {
-
-    private Integer id;
+public class CreateCarForm {
 
     private String name;
 
@@ -36,46 +34,7 @@ public class CarDTO {
 
     private long price;
 
-    private Car.CarStatus carStatus;
-
-    private Integer inventoryId;
-
-    private String inventoryName;
-
-    private  List<LibraryDTO> libraries;
-
-    public CarDTO() {
-    }
-
-    public CarDTO(Integer id, String name, int year, String status, double odo, String original, String style, String gear, String engine, String colorOut, String colorIn, int slotSeats, int slotDoor, String driveTrain, long price, Car.CarStatus carStatus, Integer inventoryId, String inventoryName, List<LibraryDTO> libraries) {
-        this.id = id;
-        this.name = name;
-        this.year = year;
-        this.status = status;
-        this.odo = odo;
-        this.original = original;
-        this.style = style;
-        this.gear = gear;
-        this.engine = engine;
-        this.colorOut = colorOut;
-        this.colorIn = colorIn;
-        this.slotSeats = slotSeats;
-        this.slotDoor = slotDoor;
-        this.driveTrain = driveTrain;
-        this.price = price;
-        this.carStatus = carStatus;
-        this.inventoryId = inventoryId;
-        this.inventoryName = inventoryName;
-        this.libraries = libraries;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private List<MultipartFile> images;
 
     public String getName() {
         return name;
@@ -189,35 +148,32 @@ public class CarDTO {
         this.price = price;
     }
 
-    public Integer getInventoryId() {
-        return inventoryId;
+    public List<MultipartFile> getImages() {
+        return images;
     }
 
-    public void setInventoryId(Integer inventoryId) {
-        this.inventoryId = inventoryId;
+    public void setImages(List<MultipartFile> images) {
+        this.images = images;
     }
 
-    public String getInventoryName() {
-        return inventoryName;
-    }
-
-    public void setInventoryName(String inventoryName) {
-        this.inventoryName = inventoryName;
-    }
-
-    public List<LibraryDTO> getLibraries() {
-        return libraries;
-    }
-
-    public void setLibraries(List<LibraryDTO> libraries) {
-        this.libraries = libraries;
-    }
-
-    public Car.CarStatus getCarStatus() {
-        return carStatus;
-    }
-
-    public void setCarStatus(Car.CarStatus carStatus) {
-        this.carStatus = carStatus;
+    @Override
+    public String toString() {
+        return "CreateCarForm{" +
+                "name='" + name + '\'' +
+                ", year=" + year +
+                ", status='" + status + '\'' +
+                ", odo=" + odo +
+                ", original='" + original + '\'' +
+                ", style='" + style + '\'' +
+                ", gear='" + gear + '\'' +
+                ", engine='" + engine + '\'' +
+                ", colorOut='" + colorOut + '\'' +
+                ", colorIn='" + colorIn + '\'' +
+                ", slotSeats=" + slotSeats +
+                ", slotDoor=" + slotDoor +
+                ", driveTrain='" + driveTrain + '\'' +
+                ", price=" + price +
+                ", images=" + images +
+                '}';
     }
 }
