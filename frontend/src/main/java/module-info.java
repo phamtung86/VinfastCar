@@ -14,4 +14,7 @@ module com.vinfast.fe {
 
     opens com.vinfast.controller to javafx.fxml;
     exports com.vinfast.controller;
+
+    opens com.vinfast.model to javafx.fxml;
+    exports com.vinfast.model;
 }

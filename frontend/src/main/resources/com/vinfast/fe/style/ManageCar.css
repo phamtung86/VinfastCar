@@ -23,3 +23,8 @@
     -fx-background-color: #4fb3f1;
     -fx-cursor: HAND;
 }
+
+.btn-view-detail{
+    -fx-background-color: #69dd06;
+    -fx-cursor: HAND;
+}

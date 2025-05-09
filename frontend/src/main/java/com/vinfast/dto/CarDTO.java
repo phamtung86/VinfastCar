@@ -23,7 +23,6 @@ public class CarDTO {
     private long price;
     private String carStatus;
     private Integer inventoryId;
-
     private String inventoryName;
     private List<LibraryDTO> libraries;
 

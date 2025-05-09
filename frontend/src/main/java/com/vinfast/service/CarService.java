@@ -9,8 +9,8 @@ import java.util.List;
 public class CarService {
     private final CarApi api = new CarApi();
 
-    public List<CarDTO> getAllCars() throws IOException, InterruptedException {
-        // có thể xử lý cache hoặc logic bổ sung ở đây
-        return CarApi.getAllCars();
-    }
+//    public List<CarDTO> getAllCars() throws IOException, InterruptedException {
+//        // có thể xử lý cache hoặc logic bổ sung ở đây
+//        return CarApi.getAllCarsByPages();
+//    }
 }

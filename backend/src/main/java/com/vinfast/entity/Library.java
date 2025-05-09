@@ -16,6 +16,8 @@ public class Library {
 
     private String title;
 
+    private String publicId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
@@ -23,10 +25,11 @@ public class Library {
     public Library() {
     }
 
-    public Library(int id, String urlLink, String title, Car car) {
+    public Library(int id, String urlLink, String title, String publicId, Car car) {
         this.id = id;
         this.urlLink = urlLink;
         this.title = title;
+        this.publicId = publicId;
         this.car = car;
     }
 
@@ -52,6 +55,14 @@ public class Library {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
 
     public Car getCar() {
