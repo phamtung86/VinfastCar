@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" />
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.SupportController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #EFF2F6;" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER" prefHeight="34.0" prefWidth="600.0" style="-fx-background-color: #2686ea;">
+               <children>
+                  <Label contentDisplay="CENTER" text="Hỗ Trợ Khách Hàng" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="23.0" prefWidth="600.0">
+               <children>
+                  <HBox prefHeight="28.0" prefWidth="281.0" styleClass="search-container" stylesheets="@style/Dashboard.css" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fitHeight="26.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@image/search.png" />
+                           </image></ImageView>
+                        <TextField prefHeight="25.0" prefWidth="265.0" styleClass="transparent" stylesheets="@style/Dashboard.css" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></HBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="221.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#addInvoice" styleClass="btn-add" stylesheets="@style/ManageCar.css" text="Thêm đơn hàng" textFill="WHITE">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icon/add-button.png" />
+                                 </image></ImageView>
+                           </graphic>
+                        </Button>
+                     </children></VBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin></HBox>
+            <TableView fx:id="orderTable" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="inforCustomer" prefWidth="134.00000762939453" text="Thông tin khách hàng" />
+                  <TableColumn fx:id="inforCar" prefWidth="65.19998168945312" text="Tên xe" />
+                  <TableColumn fx:id="totalAmount" prefWidth="75.0" text="Tổng tiền" />
+                  <TableColumn fx:id="createAt" prefWidth="75.0" text="Ngày tạo" />
+                  <TableColumn fx:id="status" prefWidth="75.0" text="Trạng thái" />
+                  <TableColumn fx:id="action" text="Hành động" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children></VBox>
+   </children>
+</HBox>

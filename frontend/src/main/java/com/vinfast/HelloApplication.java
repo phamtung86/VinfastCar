@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/vinfast/fe/Login.fxml"));
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/vinfast/AdminPage.fxml"));
         stage.initStyle(StageStyle.UNDECORATED);
-        Scene scene = new Scene(fxmlLoader.load(), 900, 460);
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 460);
         stage.setTitle("Admin-Login");
         stage.setScene(scene);
         stage.show();
