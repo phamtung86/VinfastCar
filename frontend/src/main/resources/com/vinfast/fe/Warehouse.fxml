@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox layoutX="200.0" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="200" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <!-- Thanh tiêu đề -->
+        <TextField editable="false" style="-fx-background-color: transparent; -fx-font-size: 18px; -fx-font-weight: bold;" text="Danh Sách Sản Phẩm" />
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" />
+        <!-- Thanh công cụ -->
+        <HBox spacing="10">
+            <Button style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Tạo mới sản phẩm" />
+            <Button text="Tải từ file" />
+            <Button text="In dữ liệu" />
+            <Button text="Sao chép" />
+            <Button text="Xuất Excel" />
+            <Button text="Xuất PDF" />
+            <Button style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Xóa tất cả" />
+        </HBox>
+
+        <!-- Bảng sản phẩm -->
+        <TableView fx:id="productTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="codeCol" prefWidth="100" text="Mã sản phẩm" />
+                <TableColumn fx:id="nameCol" prefWidth="150" text="Tên sản phẩm" />
+                <TableColumn fx:id="imageCol" prefWidth="100" text="Ảnh" />
+                <TableColumn fx:id="quantityCol" prefWidth="80" text="Số lượng" />
+                <TableColumn fx:id="statusCol" editable="false" prefWidth="100" text="Tình trạng" />
+                <TableColumn fx:id="priceCol" prefWidth="120" text="Giá tiền" />
+                <TableColumn fx:id="categoryCol" prefWidth="100" text="Danh mục" />
+                <TableColumn fx:id="actionsCol" prefWidth="100" text="Chức năng" />
+            </columns>
+        </TableView>
+    </VBox>
+</HBox>
