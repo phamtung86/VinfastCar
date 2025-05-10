@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="943.0" style="-fx-background-color: white;" stylesheets="@style/ManageCar.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.ManageCarController">
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Label?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" stylesheets="@style/ManageCar.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.WarehouseController">
     <children>
         <VBox prefHeight="200.0" prefWidth="607.0" HBox.hgrow="ALWAYS">
             <children>
                 <AnchorPane maxHeight="20.0" prefHeight="20.0" prefWidth="943.0" styleClass="manage-car-header" VBox.vgrow="ALWAYS">
                     <children>
-                        <TextField alignment="CENTER" editable="false" prefHeight="32.0" prefWidth="287.0" styleClass="manage-car-header-text" text="Quản Lý Kho Xe" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TextField alignment="CENTER" editable="false" prefHeight="32.0" prefWidth="287.0" styleClass="manage-car-header-text" text="Quản Lý Xe" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <font>
                                 <Font name="System Bold" size="22.0" />
                             </font>
@@ -23,8 +29,8 @@
                     <children>
                         <Pane fx:id="boxFeatureSearch" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                             <children>
-                                <TextField fx:id="searchField" layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="445.0" promptText="Tên kho" />
-                                <Button fx:id="btnSearchCar" layoutX="482.0" layoutY="7.0" onAction="#handleSearchCar" prefHeight="25.0" styleClass="btn-search" text="Tìm Kiếm" textFill="WHITE">
+                                <TextField fx:id="searchField" layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="445.0" promptText="Tìm kiếm kho xe" />
+                                <Button fx:id="btnSearchCar" layoutX="482.0" layoutY="7.0" prefHeight="25.0" styleClass="btn-search" text="Tìm Kiếm" textFill="WHITE">
                                     <graphic>
                                         <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -36,7 +42,7 @@
                                         <Font name="System Bold" size="12.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="btnAddCar" layoutX="604.0" layoutY="7.0" onAction="#handleAddCar" prefHeight="25.0" prefWidth="74.0" styleClass="btn-add" text="Thêm" textFill="#fcfcfc">
+                                <Button fx:id="btnAddCar" layoutX="604.0" layoutY="7.0" prefHeight="25.0" prefWidth="74.0" styleClass="btn-add" text="Thêm" textFill="#fcfcfc">
                                     <font>
                                         <Font name="System Bold" size="12.0" />
                                     </font>
@@ -48,7 +54,7 @@
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button fx:id="btnEditCar" layoutX="697.0" layoutY="8.0" onAction="#handleEditCar" prefHeight="25.0" prefWidth="66.0" styleClass="btn-modify" text="Sửa">
+                                <Button fx:id="btnEditCar" layoutX="697.0" layoutY="8.0" prefHeight="25.0" prefWidth="66.0" styleClass="btn-modify" text="Sửa">
                                     <font>
                                         <Font name="System Bold" size="12.0" />
                                     </font>
@@ -60,7 +66,7 @@
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button fx:id="btnDeleteCar" layoutX="776.0" layoutY="8.0" onAction="#handleDeleteCar" prefHeight="25.0" prefWidth="74.0" styleClass="btn-delete" text="Xóa" textFill="#f5f2f2">
+                                <Button fx:id="btnDeleteCar" layoutX="776.0" layoutY="8.0"  prefHeight="25.0" prefWidth="74.0" styleClass="btn-delete" text="Xóa" textFill="#f5f2f2">
                                     <font>
                                         <Font name="System Bold" size="12.0" />
                                     </font>
@@ -72,7 +78,7 @@
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button fx:id="btnViewDetail" layoutX="862.0" layoutY="7.0" onAction="#handleViewDetail" prefHeight="28.0" prefWidth="74.0" styleClass="btn-view-detail" text="Xem" textFill="#f5f2f2">
+                                <Button fx:id="btnViewDetail" layoutX="862.0" layoutY="7.0"  prefHeight="28.0" prefWidth="74.0" styleClass="btn-view-detail" text="Xem" textFill="#f5f2f2">
                                     <font>
                                         <Font name="System Bold" size="12.0" />
                                     </font>
@@ -91,20 +97,20 @@
                         </Pane>
                     </children>
                 </HBox>
-                <TableView fx:id="carTable" prefHeight="493.0" prefWidth="943.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="inventoryTable" prefHeight="493.0" prefWidth="943.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="idCol" text="Mã" />
                         <TableColumn fx:id="nameCol" text="Tên" />
-                        <TableColumn fx:id="imageCol" text="Địa chỉ" />
-                        <TableColumn fx:id="odoCol" text="Xe hiện có" />
-                        <TableColumn fx:id="yearCol" text="Sức chứa" />
+                        <TableColumn fx:id="locationCol" text="Địa chỉ" />
+                        <TableColumn fx:id="capacityCol" text="Xe hiện chứa" />
+                        <TableColumn fx:id="carCount" text="Sức chứa" />
                         <TableColumn fx:id="statusCol" text="Trạng thái" />
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER" spacing="10">
-                    <Button fx:id="btnPrev" onAction="#goToPreviousPage" text="← Trước" />
+                    <Button fx:id="btnPrev" text="← Trước" />
                     <Label fx:id="lblPage" text="Trang 1" />
-                    <Button fx:id="btnNext" onAction="#goToNextPage" text="Sau →" />
+                    <Button fx:id="btnNext" text="Sau →" />
                 </HBox>
             </children>
         </VBox>
