@@ -6,7 +6,6 @@ import com.vinfast.config.ApiConfig;
 import com.vinfast.dto.CarDTO;
 import com.vinfast.model.CarPageResponse;
 import com.vinfast.ui.alert.AlertNotice;
-import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -37,6 +36,28 @@ public class CarApi {
         }
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(response.body(), CarPageResponse.class);
+    }
+
+    public List<CarDTO> getAllCars() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -99,7 +120,8 @@ public class CarApi {
         }
     }
 
-    public void editCar(CarDTO car) {
+    public int editCar(CarDTO car) {
+        int status = 0;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(car);
@@ -112,15 +134,11 @@ public class CarApi {
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                alertNotice.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Cập nhật thành công", null);
-            } else {
-                alertNotice.showAlert(Alert.AlertType.ERROR, "Thất bại", "Cập nhật thất bại", null);
-            }
+            status = response.statusCode();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return status;
     }
 
     public int deleteCar(int carId) {

@@ -25,6 +25,7 @@ public class CarActionHandler {
     private final List<String> driveTrainOptions = Arrays.asList("FWD", "RWD", "AWD");
     private final List<String> gearOptions = Arrays.asList("Số sàn", "Số tự động");
     private final List<String> styleOptions = Arrays.asList("Hatchback", "Sedan", "SUV", "Crossover (CUV)", "MPV", "Pickup");
+    private final List<String> statusOptions = Arrays.asList("AVAILABLE", "RESERVED","SOLD", "DELIVERED");
     private AlertNotice alertNotice = new AlertNotice();
     private final CarApi carApi = new CarApi();
 
@@ -228,7 +229,8 @@ public class CarActionHandler {
             TextField statusField = new TextField(selectedCar.getStatus());
             ComboBox<String> styleField = new ComboBox<>(FXCollections.observableArrayList(styleOptions));
             styleField.setValue(selectedCar.getStyle());
-
+            ComboBox<String> carStatusField = new ComboBox<>(FXCollections.observableArrayList(statusOptions));
+            carStatusField.setValue(selectedCar.getCarStatus());
             TextField colorOutField = new TextField(selectedCar.getColorOut());
             TextField colorInField = new TextField(selectedCar.getColorIn());
             TextField slotSeatsField = new TextField(String.valueOf(selectedCar.getSlotSeats()));
@@ -271,6 +273,8 @@ public class CarActionHandler {
             grid.add(slotDoorField, 1, 12);
             grid.add(new Label("Dẫn động:"), 0, 13);
             grid.add(driveTrainField, 1, 13);
+            grid.add(new Label("Trạng thái"), 0, 14);
+            grid.add(carStatusField, 1, 14);
 
             dialog.getDialogPane().setContent(grid);
 
@@ -292,6 +296,7 @@ public class CarActionHandler {
                     selectedCar.setSlotSeats(Integer.parseInt(slotSeatsField.getText()));
                     selectedCar.setSlotDoor(Integer.parseInt(slotDoorField.getText()));
                     selectedCar.setDriveTrain(driveTrainField.getValue());
+                    selectedCar.setCarStatus(carStatusField.getValue());
                     return selectedCar;
                 }
                 return null;
@@ -299,8 +304,13 @@ public class CarActionHandler {
 
             Optional<CarDTO> result = dialog.showAndWait();
             result.ifPresent(car -> {
-                carApi.editCar(car);
-                carTable.refresh();
+                int statusResponse = carApi.editCar(car);
+                if (statusResponse == 200) {
+                    carTable.refresh();
+                    alertNotice.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Cập nhật thành công", null);
+                } else {
+                    alertNotice.showAlert(Alert.AlertType.ERROR, "Thất bại", "Cập nhật thất bại", null);
+                }
             });
         }
     }
