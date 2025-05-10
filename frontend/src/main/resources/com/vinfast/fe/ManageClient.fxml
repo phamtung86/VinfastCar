@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
+<HBox alignment="TOP_CENTER" stylesheets="@style/ManageClient.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.ManageClientController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="607.0" HBox.hgrow="ALWAYS">
+            <AnchorPane maxHeight="20.0" prefHeight="20.0" prefWidth="943.0" styleClass="manage-client-header" VBox.vgrow="ALWAYS">
+                <children>
+                    <TextField alignment="CENTER" editable="false" prefHeight="32.0" prefWidth="287.0" styleClass="manage-client-header-text" text="Quản Lý Khách Hàng" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <font>
+                            <Font name="System Bold" size="22.0" />
+                        </font></TextField>
+                </children>
+            </AnchorPane>
+            <HBox fx:id="boxFeature" prefHeight="29.0" prefWidth="943.0" style="-fx-background-color: white;">
+                <children>
+                    <Pane fx:id="boxFeatureSearch" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
+                        <children>
+                            <TextField layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="474.0" promptText="Nhập vào tên khách hàng" />
+                            <Button fx:id="btnSearchCustomer" layoutX="510.0" layoutY="7.0" onAction="#handleSearchCustomer" prefHeight="25.0" styleClass="btn-search" text="Tìm Kiếm" textFill="WHITE">
+                                <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@icon/find.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <font>
+                                    <Font name="System Bold" size="12.0" />
+                                </font>
+                            </Button>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" />
+                            <!-- Nút làm mới -->
+                            <Button fx:id="btnRefresh" layoutX="628.0" layoutY="7.0" onAction="#handleRefreshTable" prefHeight="25.0" styleClass="btn-refresh" text="Làm mới" textFill="WHITE">
+                                <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@icon/refresh.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <font>
+                                    <Font name="System Bold" size="12.0" />
+                                </font>
+                            </Button>
+                        </children>
+                        <padding>
+                            <Insets top="5.0" />
+                        </padding>
+                    </Pane>
+                </children>
+            </HBox>
+            <AnchorPane VBox.vgrow="ALWAYS">
+                <children>
+                    <TableView fx:id="customerTable" prefHeight="411.0" prefWidth="819.0" style="-fx-text-fill: black;">
+                        <AnchorPane.topAnchor>0.0</AnchorPane.topAnchor>
+                        <AnchorPane.bottomAnchor>0.0</AnchorPane.bottomAnchor>
+                        <AnchorPane.leftAnchor>0.0</AnchorPane.leftAnchor>
+                        <AnchorPane.rightAnchor>0.0</AnchorPane.rightAnchor>
+                        <columns>
+                            <!--                            <TableColumn fx:id="colSerial" prefWidth="50" text="STT" />-->
+                            <TableColumn fx:id="colId" prefWidth="30" text="ID" />
+                            <TableColumn fx:id="colName" prefWidth="120" text="Tên khách hàng" />
+                            <TableColumn fx:id="colPhone" prefWidth="80" text="Số điện thoại" />
+                            <TableColumn fx:id="colEmail" prefWidth="100" text="Email" />
+                            <TableColumn fx:id="colAddress" prefWidth="150" text="Địa chỉ" />
+                            <TableColumn fx:id="colCreatedAt" prefWidth="100" text="Ngày tạo" />
+                            <TableColumn fx:id="colOrderCount" prefWidth="130" text="Tổng tiền" />
+                        </columns>
+                    </TableView>
+                </children>
+            </AnchorPane>
+        </VBox>
+    </children>
+</HBox>

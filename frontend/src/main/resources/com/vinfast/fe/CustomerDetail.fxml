@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="538.0" prefWidth="800" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.CustomerDetailController">
+    <VBox AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <children>
+            <HBox prefHeight="259.0" prefWidth="798.0" spacing="20" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+                <children>
+
+                    <!-- VBox bọc GridPane để căn chỉnh tốt hơn -->
+                    <VBox alignment="TOP_LEFT" HBox.hgrow="ALWAYS">
+                        <GridPane alignment="TOP_CENTER" hgap="10" prefHeight="227.0" prefWidth="381.0" vgap="10">
+                            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+                            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Thông tin khách hàng" GridPane.columnSpan="2" />
+
+                            <Label text="Mã khách hàng :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="txtCustomerId" prefHeight="26.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                            <Label text="Tên khách hàng :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="txtCustomerName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                            <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                            <Label text="Số điện thoại :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <TextField fx:id="txtPhone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                            <Label text="Địa chỉ :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                            <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                    <Separator orientation="VERTICAL" prefHeight="259.0" prefWidth="66.0" />
+
+                    <!-- VBox bọc GridPane cho thông tin xe -->
+                    <VBox alignment="TOP_RIGHT" prefHeight="226.0" prefWidth="377.0" HBox.hgrow="ALWAYS">
+                        <GridPane alignment="TOP_CENTER" hgap="10" prefHeight="227.0" prefWidth="351.0" vgap="10">
+                            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+                            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Thông tin xe" GridPane.columnSpan="2" />
+
+                            <Label text="Mã xe :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="txtVehicleId" prefHeight="26.0" prefWidth="194.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                            <Label text="Tên xe :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="txtVehicleName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                            <Label text="Giá xe :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <TextField fx:id="txtVehiclePrice" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                </children>
+            </HBox>
+        </children>
+    </VBox>
+    <Separator orientation="HORIZONTAL" prefHeight="10.0"
+               AnchorPane.topAnchor="252.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    <AnchorPane AnchorPane.topAnchor="260.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <children>
+            <TableView fx:id="tableView" AnchorPane.topAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+                <columns>
+                    <TableColumn fx:id="colSerial" prefWidth="50" text="STT" />
+                    <TableColumn fx:id="colCustomerName" prefWidth="120" text="Tên khách hàng" />
+                    <TableColumn fx:id="colPhone" prefWidth="100" text="Số điện thoại" />
+                    <TableColumn fx:id="colEmail" prefWidth="150" text="Email" />
+                    <TableColumn fx:id="colAddress" prefWidth="150" text="Địa chỉ" />
+                    <TableColumn fx:id="colIdCar" prefWidth="40" text="Mã xe" />
+                    <TableColumn fx:id="colPurchaseDate" prefWidth="100" text="Ngày mua" />
+                    <TableColumn fx:id="colPrice" prefWidth="130" text="Giá xe" />
+                </columns>
+            </TableView>
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="132.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Thông tin chi tiết" />
+
+        </children></AnchorPane>
+</AnchorPane>

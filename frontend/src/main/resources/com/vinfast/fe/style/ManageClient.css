@@ -1,0 +1,17 @@
+.manage-client-header{
+    -fx-background-color: #2686ea;
+}
+.manage-client-header-text{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.btn-search{
+    -fx-background-color: #4fb3f1;
+    -fx-cursor: HAND;
+}
+
+.btn-refresh{
+    -fx-background-color: #D9D3A3;
+    -fx-cursor: HAND;
+}
