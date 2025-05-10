@@ -1,5 +1,8 @@
 package com.vinfast.controller;
 
+import com.vinfast.api.CarApi;
+import com.vinfast.dto.CarDTO;
+import com.vinfast.ui.chart.CarPieChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +22,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminPageController implements Initializable {
@@ -27,6 +31,7 @@ public class AdminPageController implements Initializable {
     @FXML
     private VBox mainContainer;
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
+
     private void loadPage(String fxmlFile) {
         try {
             if (savedContentBox == null) {
@@ -49,19 +54,38 @@ public class AdminPageController implements Initializable {
     }
 
     @FXML
+    private HBox chartContainer;
+    @FXML
     private ChoiceBox<String> logChoice;
+
+    @FXML
+    private VBox salesLineChartContainer;
+    @FXML
+    private VBox pieChartContainer;
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
+    private CarApi carApi;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        carApi = new CarApi();
         logChoice.setItems(list);
+        List<CarDTO> cars = carApi.getAllCars();
+        CarPieChart pieChart = new CarPieChart(cars, "Phân phối xe theo trạng thái");
+        pieChartContainer.getChildren().add(pieChart); // Line 73
+        if (salesLineChartContainer == null) {
+            System.err.println("salesLineChartContainer is null!");
+            return;
+        }
     }
+
     @FXML
-    private void handleChoiceBoxSelection(ActionEvent e){
+    private void handleChoiceBoxSelection(ActionEvent e) {
         String selectedBox = logChoice.getValue();
-        if("LogOut".equals(selectedBox)){
+        if ("LogOut".equals(selectedBox)) {
             loadLoginPage();
         }
     }
+
     private void loadLoginPage() {
         try {
             // Load trang Login
@@ -90,6 +114,7 @@ public class AdminPageController implements Initializable {
     private void showAlert(String title, String message) {
         System.out.println(title + ": " + message);
     }
+
     public void moveToDashBoard(MouseEvent mouseEvent) {
         if (savedContentBox != null) {
             int index = mainContainer.getChildren().indexOf(contentBox);
