@@ -1,10 +1,9 @@
 package com.vinfast.controller;
 
-import com.vinfast.api.CarApi;
 import com.vinfast.api.InventoryApi;
 import com.vinfast.dto.InventoryDTO;
 import com.vinfast.model.InventoryPageResponse;
-import com.vinfast.ui.car.CarActionHandler;
+import com.vinfast.ui.inventory.InventoryActionHandler;
 import com.vinfast.ui.table.InventoryTableConfigurer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -61,13 +60,12 @@ public class WarehouseController implements Initializable {
     private long totalInventory = 0;
     private boolean isLastPage = false;
     private boolean isFirstPage = true;
-    private CarActionHandler actionHandler;
-    private CarApi carApi;
     private InventoryApi inventoryApi;
+    private InventoryActionHandler inventoryActionHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        actionHandler = new CarActionHandler(inventoryTable, this::updateTableData);
+        inventoryActionHandler = new InventoryActionHandler(inventoryTable, this::updateTableData);
         inventoryApi = new InventoryApi();
 
         InventoryTableConfigurer tableConfigurer = new InventoryTableConfigurer(
@@ -128,31 +126,21 @@ public class WarehouseController implements Initializable {
     }
 
     @FXML
-    private void handleAddCar() {
-        actionHandler.handleAddCar();
+    private void handleAddInventory() {
+        inventoryActionHandler.handleAdd();
     }
 
     @FXML
-    private void handleEditCar() {
-        actionHandler.handleEditCar();
-    }
-
-    @FXML
-    public void handleViewDetail(){
-        actionHandler.handleViewDetailCar();
+    private void handleEditInventory() {
+        inventoryActionHandler.handleEditInventory();
     }
 
 
     @FXML
-    private void handleDeleteCar() {
-        actionHandler.handleDeleteCar();
+    private void handleDeleteInventory() {
+        inventoryActionHandler.handleDeleteInventory();
     }
 
-    @FXML
-    private void handleSearchCar() {
-        String searchTerm = searchField.getText();
-        actionHandler.handleSearchCar(searchTerm);
-    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
