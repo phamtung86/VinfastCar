@@ -1,22 +1,38 @@
+
 package com.vinfast.dto;
 
-public class InventoryDTO {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
+public class InventoryDTO{
 
     private Long id;
-    private Long carId;
-    private String carName;
-    private int quantity;
+    private int capacity;
     private String location;
+    private String name;
+    private List<CarDTO> cars;
+    private int carCount;
+    private float perFull;
 
     public InventoryDTO() {
     }
-
-    public InventoryDTO(Long id, Long carId, String carName, int quantity, String location) {
-        this.id = id;
-        this.carId = carId;
-        this.carName = carName;
-        this.quantity = quantity;
+    @JsonCreator
+    public InventoryDTO(
+            @JsonProperty("id") Long id,
+            @JsonProperty("capacity") Integer capacity,
+            @JsonProperty("location") String location,
+            @JsonProperty("name") String name,
+            @JsonProperty("cars") List<CarDTO> cars
+    ){
+        this.capacity = capacity;
         this.location = location;
+        this.name = name;
+        this.id = id;
+        this.cars = cars;
+        this.carCount = cars.size();
+        this.perFull = (float) cars.size()/capacity;
     }
 
     public Long getId() {
@@ -27,35 +43,51 @@ public class InventoryDTO {
         this.id = id;
     }
 
-    public Long getCarId() {
-        return carId;
-    }
-
-    public void setCarId(Long carId) {
-        this.carId = carId;
-    }
-
-    public String getCarName() {
-        return carName;
-    }
-
-    public void setCarName(String carName) {
-        this.carName = carName;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getLocation() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<CarDTO> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<CarDTO> cars) {
+        this.cars = cars;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCarCount() {
+        return carCount;
+    }
+
+    public void setCarCount(int carCount) {
+        this.carCount = carCount;
+    }
+
+    public float getPerFull() {
+        return perFull;
+    }
+
+    public void setPerFull(float perFull) {
+        this.perFull = perFull;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
