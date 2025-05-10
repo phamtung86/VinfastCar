@@ -5,18 +5,20 @@ import java.util.List;
 public class InventoryDTO {
 
     private Long id;
-    private int Capacity;
+    private int capacity;
     private String location;
+    private String name;
     private List<CarDTO> cars;
 
     public InventoryDTO() {
     }
 
-    public InventoryDTO(Long id, int capacity, String location, List<CarDTO> cars) {
-        this.id = id;
-        Capacity = capacity;
+    public InventoryDTO(int capacity, String location, String name, List<CarDTO> cars, Long id) {
+        this.capacity = capacity;
         this.location = location;
+        this.name = name;
         this.cars = cars;
+        this.id = id;
     }
 
     public Long getId() {
@@ -36,11 +38,11 @@ public class InventoryDTO {
     }
 
     public int getCapacity() {
-        return Capacity;
+        return capacity;
     }
 
     public void setCapacity(int capacity) {
-        Capacity = capacity;
+        this.capacity = capacity;
     }
 
     public List<CarDTO> getCars() {
@@ -49,5 +51,13 @@ public class InventoryDTO {
 
     public void setCars(List<CarDTO> cars) {
         this.cars = cars;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
