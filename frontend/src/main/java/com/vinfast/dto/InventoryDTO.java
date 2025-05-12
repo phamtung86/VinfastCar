@@ -32,7 +32,7 @@ public class InventoryDTO{
         this.id = id;
         this.cars = cars;
         this.carCount = cars.size();
-        this.perFull = (float) cars.size()/capacity;
+        this.perFull = (float) (Math.round((float) cars.size()/capacity * 100.0) / 10.0);;
     }
 
     public Long getId() {

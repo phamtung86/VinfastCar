@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.config.ApiConfig;
 import com.vinfast.dto.CarDTO;
 import com.vinfast.dto.InventoryDTO;
+import com.vinfast.dto.InventoryTopDTO;
 import com.vinfast.model.CarPageResponse;
 import com.vinfast.model.InventoryPageResponse;
 import com.vinfast.ui.alert.AlertNotice;
@@ -60,6 +61,29 @@ public class InventoryApi {
             e.printStackTrace();
         }
        return null;
+    }
+
+    public List<InventoryTopDTO> getInventoryTop() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/inventories/top"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+//                alertNotice.showAlert("Lỗi", "Không thể tải dữ liệu kho top!", Alert.AlertType.ERROR);
+                return List.of();
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<InventoryTopDTO>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+//            alertNotice.showAlert("Lỗi", "Đã xảy ra lỗi khi tải kho top!", Alert.AlertType.ERROR);
+        }
+        return List.of();
     }
 
     public int addInventory(InventoryDTO inventory) {

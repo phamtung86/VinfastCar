@@ -402,6 +402,15 @@
                                                 <VBox fx:id="pieChartContainer" prefWidth="379.5" HBox.hgrow="ALWAYS" />
                                                 <VBox fx:id="salesLineChartContainer" prefWidth="379.5" HBox.hgrow="ALWAYS" />
                                             </children>
+
+                                            <StackedBarChart fx:id="inventoryChart" prefHeight="158.0" prefWidth="350.0" title="Chart2" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
+                                                <xAxis>
+                                                    <CategoryAxis fx:id="inventoryChartXAxis" side="BOTTOM" />
+                                                </xAxis>
+                                                <yAxis>
+                                                    <NumberAxis fx:id="inventoryChartYAxis" side="LEFT" />
+                                                </yAxis>
+                                            </StackedBarChart>
                                             <VBox.margin>
                                                 <Insets left="10.0" right="10.0" />
                                             </VBox.margin>
