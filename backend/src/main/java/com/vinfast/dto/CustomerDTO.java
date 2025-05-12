@@ -1,5 +1,7 @@
 package com.vinfast.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,16 +12,22 @@ public class CustomerDTO {
     private String phone;
     private String email;
     private String address;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date createdAt;
-//    private List<OrderDTO> orders;
+    private List<OrderDTO> orders;
+    private String role;
 
-    public CustomerDTO(Long id, String name, String phone, String email, String address, Date createdAt) {
+    public CustomerDTO() {
+    }
+
+    public CustomerDTO(Long id, String name, String phone, String email, String address, Date createdAt, List<OrderDTO> orders) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.createdAt = createdAt;
+        this.orders = orders;
     }
 
     public Long getId() {
@@ -68,5 +76,21 @@ public class CustomerDTO {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<OrderDTO> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderDTO> orders) {
+        this.orders = orders;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

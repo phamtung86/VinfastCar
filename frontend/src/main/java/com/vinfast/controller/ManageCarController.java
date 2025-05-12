@@ -5,15 +5,18 @@ import com.vinfast.dto.CarDTO;
 import com.vinfast.dto.LibraryDTO;
 import com.vinfast.model.CarPageResponse;
 import com.vinfast.ui.car.CarActionHandler;
+import com.vinfast.ui.chart.CarScatterChart;
 import com.vinfast.ui.table.CarTableConfigurer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -66,6 +69,7 @@ public class ManageCarController implements Initializable {
 
     @FXML
     private Button btnNext;
+
 
     private int currentPage = 1;
     private final int pageSize = 10;

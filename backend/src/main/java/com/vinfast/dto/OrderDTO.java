@@ -1,13 +1,14 @@
 package com.vinfast.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderDTO {
     private Long id;
     private Integer customerId;
-
     private String customerName;
     private CarDTO car;
     private Date orderDate;

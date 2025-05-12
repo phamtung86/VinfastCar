@@ -12,6 +12,8 @@ import javafx.scene.shape.Circle;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class CarTableConfigurer {
     private final TableView<CarDTO> carTable;
@@ -25,6 +27,13 @@ public class CarTableConfigurer {
     private final TableColumn<CarDTO, Long> priceCol;
     private final TableColumn<CarDTO, String> statusCol;
     private final TableColumn<CarDTO, String> engineCol;
+
+    private static final Map<String, String> STATUS_ICON_PATHS = Map.of(
+            "AVAILABLE", "/com/vinfast/fe/icon/available.png",
+            "RESERVED", "/com/vinfast/fe/icon/booked.png",
+            "SOLD", "/com/vinfast/fe/icon/sold.png",
+            "DELIVERED", "/com/vinfast/fe/icon/delivered.png"
+    );
 
     public CarTableConfigurer(
             TableView<CarDTO> carTable,
@@ -111,7 +120,6 @@ public class CarTableConfigurer {
         engineCol.setStyle("-fx-alignment: CENTER;");
         imageCol.setStyle("-fx-alignment: CENTER;");
     }
-
     public void setDataIntoTableView() {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -144,34 +152,27 @@ public class CarTableConfigurer {
             }
         });
 
-        statusCol.setCellFactory(col -> new TableCell<>() {
+        statusCol.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String carStatus, boolean empty) {
                 super.updateItem(carStatus, empty);
-                if (empty || carStatus == null) {
-                    setGraphic(null);
-                    setText(null);
+                setGraphic(null);
+                setText(null);
+
+                if (!empty && carStatus != null) {
+                    createStatusIcon(carStatus).ifPresent(icon -> {
+                        icon.setFitWidth(32);
+                        icon.setFitHeight(32);
+                        setGraphic(icon);
+                    });
                 } else {
-                    if ("AVAILABLE".equals(carStatus)) {
-                        InputStream stream = getClass().getResourceAsStream("/com/vinfast/fe/icon/available.png");
-                        if (stream != null) {
-                            ImageView successIcon = new ImageView(new Image(stream));
-                            successIcon.setFitWidth(16);
-                            successIcon.setFitHeight(16);
-                            setGraphic(successIcon);
-                        } else {
-                            System.err.println("Failed to load icon at /com/vinfast/fe/icon/available.png");
-                            Circle successIcon = new Circle(8, Color.GREEN);
-                            setGraphic(successIcon);
-                        }
-                    } else {
-                        setGraphic(null);
-                        setText(carStatus);
-                    }
+
                 }
             }
         });
     }
+
+
     private ImageView createCarImageView(List<LibraryDTO> images) {
         if (images == null || images.isEmpty()) return new ImageView();
         String imagePath = images.get(0).getUrlLink();
@@ -183,6 +184,27 @@ public class CarTableConfigurer {
         } catch (Exception e) {
             System.err.println("Failed to load image: " + imagePath);
             return new ImageView();
+        }
+    }
+    private Optional<ImageView> createStatusIcon(String status) {
+        return Optional.ofNullable(STATUS_ICON_PATHS.get(status))
+                .flatMap(this::loadImageViewFromResource)
+                .or(() -> {
+                    // Log if status is not mapped (for debugging)
+                    System.out.println("No icon found for status: " + status);
+                    return Optional.empty();
+                });
+    }
+    private Optional<ImageView> loadImageViewFromResource(String resourcePath) {
+        try (InputStream stream = getClass().getResourceAsStream(resourcePath)) {
+            if (stream == null) {
+                System.err.println("Resource not found: " + resourcePath);
+                return Optional.empty();
+            }
+            return Optional.of(new ImageView(new Image(stream)));
+        } catch (Exception e) {
+            System.err.println("Error loading resource " + resourcePath + ": " + e.getMessage());
+            return Optional.empty();
         }
     }
 }

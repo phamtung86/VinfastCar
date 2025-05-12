@@ -30,6 +30,9 @@ public class OrderDTO {
         this.id = id;
     }
 
+    public OrderDTO() {
+    }
+
     public Long getId() {
         return id;
     }

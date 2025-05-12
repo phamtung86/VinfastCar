@@ -1,9 +1,10 @@
 package com.vinfast.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vinfast.entity.Car;
 
 import java.util.List;
-
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CarDTO {
 
     private Integer id;

@@ -1,16 +1,12 @@
 package com.vinfast.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "customers")
-
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +20,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Order> orders;
 
+    public Customer() {
+    }
+
     public Customer(Long id, String name, String phone, String email, String address, Date createdAt, String role, List<Order> orders) {
         this.id = id;
         this.name = name;
@@ -33,9 +32,6 @@ public class Customer {
         this.createdAt = createdAt;
         this.role = role;
         this.orders = orders;
-    }
-
-    public Customer() {
     }
 
     public Long getId() {
