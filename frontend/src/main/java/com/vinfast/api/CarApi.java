@@ -38,10 +38,16 @@ public class CarApi {
         return mapper.readValue(response.body(), CarPageResponse.class);
     }
 
-    public List<CarDTO> getAllCars() {
+//    public List<CarDTO> getAllCars() {
+//        try {
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars"))
+
+    public List<CarDTO> getCarByStatus(String status)  {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars"))
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars/status?status=" + status ))
+
                     .GET()
                     .build();
 
@@ -54,7 +60,9 @@ public class CarApi {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
             });
-        } catch (Exception e) {
+
+        } catch (Exception e){
+
             e.printStackTrace();
         }
         return null;

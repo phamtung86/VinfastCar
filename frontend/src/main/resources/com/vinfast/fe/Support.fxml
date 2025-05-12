@@ -67,6 +67,11 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
+            <HBox alignment="CENTER" spacing="10">
+               <Button fx:id="btnPrev" onAction="#goToPreviousPage" text="← Trước" />
+               <Label fx:id="lblPage" text="Trang 1" />
+               <Button fx:id="btnNext" onAction="#goToNextPage" text="Sau →" />
+            </HBox>
          </children></VBox>
    </children>
 </HBox>

@@ -5,6 +5,8 @@ module com.vinfast.fe {
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires kernel;
+    requires layout;
 
     opens com.vinfast to javafx.graphics, javafx.fxml;
     exports com.vinfast;

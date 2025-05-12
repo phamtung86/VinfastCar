@@ -6,6 +6,9 @@ import com.vinfast.dto.OrderDTO;
 import com.vinfast.entity.Car;
 import com.vinfast.entity.Customer;
 import com.vinfast.entity.Order;
+
+import com.vinfast.entity.Customer;
+
 import com.vinfast.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class CustomerService implements ICustomerService{
     private CustomerRepository customerRepository;
 
     @Override
+
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
@@ -63,7 +67,7 @@ public class CustomerService implements ICustomerService{
 
     private CarDTO convertToCarDTO(Car car) {
         CarDTO carDTO = new CarDTO();
-        if (car != null){
+        if (car != null) {
             carDTO.setId(car.getId());
             carDTO.setName(car.getName());
             carDTO.setPrice(car.getPrice());
@@ -74,5 +78,8 @@ public class CustomerService implements ICustomerService{
             carDTO.setOdo(car.getOdo());
         }
         return carDTO;
+    }
+    public Customer findCustomerById(Long customerId) {
+        return customerRepository.findById(customerId).orElse(null);
     }
 }

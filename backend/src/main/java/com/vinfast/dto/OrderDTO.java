@@ -2,7 +2,6 @@ package com.vinfast.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -92,5 +91,19 @@ public class OrderDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", customerName='" + customerName + '\'' +
+                ", car=" + car +
+                ", orderDate=" + orderDate +
+                ", totalAmount=" + totalAmount +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }
