@@ -1,37 +1,24 @@
 package com.vinfast.controller;
 
 import com.vinfast.api.CustomerApi;
-import com.vinfast.dto.CarDTO;
 import com.vinfast.dto.CustomerDTO;
-import com.vinfast.dto.OrderDTO;
+import com.vinfast.ui.customer.CustomerActionHandler;
+import com.vinfast.ui.customer.DetailView;
 import com.vinfast.util.FormatUtils;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ManageClientController implements Initializable {
     @FXML private TableView<CustomerDTO> customerTable;
@@ -46,8 +33,11 @@ public class ManageClientController implements Initializable {
     @FXML
     private Pane boxFeatureSearch;
 
+    private final DetailView viewDetail = new DetailView();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        customerTable.setPlaceholder(new Label("Đang tải dữ liệu khách hàng"));
         setTableView();
         setColumn();
         getData();
@@ -100,10 +90,11 @@ public class ManageClientController implements Initializable {
 
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    CustomerDTO selectedCustomer = row.getItem();
-                    showCustomerDetail(selectedCustomer);
+                    showCustomerDetail();
                 }
             });
+
+            customerTable.setPlaceholder(new Label("Đang tải danh sách khách hàng"));
 
             return row;
         });
@@ -144,39 +135,62 @@ public class ManageClientController implements Initializable {
     }
 
     @FXML
-    private void handleSearchCustomer() {
+    private void handleSearch() {
         String searchTerm = ((TextField) boxFeatureSearch.getChildren().get(0)).getText();
-        new Thread(() -> {
-            try {
-                List<CustomerDTO> customers = CustomerApi.searchCustomers(searchTerm);
-                Platform.runLater(() -> customerTable.setItems(FXCollections.observableArrayList(customers)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+        CustomerActionHandler.searchCustomers(searchTerm, customerTable);
     }
 
     @FXML
-    private void handleRefreshTable() {
-        customerTable.getItems().clear();
-        loadAPI();
+    private void handleAdd() {
+        CustomerDTO newCustomer = CustomerActionHandler.addCustomer();
+
+        if (newCustomer != null) {
+            try {
+                CustomerApi.addCustomer(newCustomer);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Thêm khách hàng thành công!");
+                alert.showAndWait();
+
+                customerTable.getItems().clear();
+                CustomerActionHandler.loadAllCustomers(customerTable);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi thêm khách hàng: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 
-    private void showCustomerDetail(CustomerDTO customer) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/vinfast/fe/CustomerDetail.fxml"));
-            Parent root = loader.load();
+    @FXML
+    private void handleUpdate() {
+        CustomerDTO selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
 
-            CustomerDetailController controller = loader.getController();
-            controller.setCustomerDetail(customer);
-
-            Stage stage = new Stage();
-            stage.setTitle("Thông Tin Khách Hàng");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (selectedCustomer == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn khách hàng cần cập nhật!");
+            alert.showAndWait();
+            return;
         }
+
+        boolean isUpdated = CustomerActionHandler.updateCustomer(selectedCustomer.getId());
+
+        if (isUpdated) {
+            customerTable.getItems().clear();
+            CustomerActionHandler.loadAllCustomers(customerTable);
+        }
+    }
+
+    @FXML
+    private void handleDelete() {
+        CustomerActionHandler.deleteCustomer(customerTable);
+    }
+
+    @FXML
+    public void handleRefresh() {
+        ((TextField) boxFeatureSearch.getChildren().get(0)).clear();
+        customerTable.getItems().clear();
+        CustomerActionHandler.loadAllCustomers(customerTable);
+    }
+
+    private void showCustomerDetail() {
+        viewDetail.showDetail(customerTable.getSelectionModel().getSelectedItem());
     }
 }

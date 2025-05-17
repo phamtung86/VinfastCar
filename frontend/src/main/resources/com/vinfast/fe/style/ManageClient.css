@@ -1,6 +1,7 @@
 .manage-client-header{
     -fx-background-color: #2686ea;
 }
+
 .manage-client-header-text{
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -11,7 +12,27 @@
     -fx-cursor: HAND;
 }
 
+.btn-add{
+    -fx-cursor: HAND;
+    -fx-background-color: #07bc07;
+}
+
+.btn-modify{
+    -fx-background-color: #edc72c;
+    -fx-cursor: HAND;
+}
+
+.btn-delete{
+    -fx-background-color: red;
+    -fx-cursor: HAND;
+}
+
 .btn-refresh{
     -fx-background-color: #4DB6AC;
     -fx-cursor: HAND;
+}
+
+.row-view{
+    -fx-fixed-cell-size: 44.8px; /* Có thể dùng nếu không cần tính toán tự động */
+    /*nếu có phân trang thì để tầm 43 44*/
 }
