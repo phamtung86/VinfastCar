@@ -27,7 +27,7 @@ public class CarService implements ICarService {
 
     @Override
     public List<CarDTO> getAllCars() {
-        List<Car> cars = carRepository.findAll();
+        List<Car> cars = carRepository.findAllWithLibrariesAndInventory();
         return modelMapper.map(cars, new TypeToken<List<CarDTO>>() {
         }.getType());
     }
@@ -68,7 +68,7 @@ public class CarService implements ICarService {
 
     @Override
     public Page<Car> getCarsByPage(Pageable pageable) {
-        return carRepository.findAll(pageable);
+        return carRepository.findAllDistinct(pageable);
     }
 
     @Transactional
@@ -91,5 +91,6 @@ public class CarService implements ICarService {
         }
         return false;
     }
+
 
 }

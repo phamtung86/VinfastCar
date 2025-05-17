@@ -1,9 +1,5 @@
 package com.vinfast.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 public class LibraryDTO {
 
     private int id;

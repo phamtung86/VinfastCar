@@ -1,7 +1,6 @@
 package com.vinfast.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -16,7 +15,7 @@ public class Inventory {
 
     private String name;
 
-    @OneToMany( mappedBy = "inventory",fetch = FetchType.LAZY)
+    @OneToMany( mappedBy = "inventory",fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Car> cars;
 
