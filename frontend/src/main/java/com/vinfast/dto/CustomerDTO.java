@@ -84,12 +84,4 @@ public class CustomerDTO {
     public void setOrders(List<OrderDTO> orders) {
         this.orders = orders;
     }
-
-    public long getTotalAmount() {
-        if (orders == null || orders.isEmpty()) return 0L;
-        return orders.stream()
-                .filter(Objects::nonNull)
-                .mapToLong(OrderDTO::getTotalAmount)
-                .sum();
-    }
 }
