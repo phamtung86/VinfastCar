@@ -75,8 +75,6 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private HBox chartContainer;
-//    @FXML
-//    private ChoiceBox<String> logChoice;
 
     @FXML
     private VBox salesLineChartContainer;
@@ -114,26 +112,21 @@ public class AdminPageController implements Initializable {
     private Label totalInventories;
 
 
-
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
     private final CarApi carApi = new CarApi();
     private final InventoryApi inventoryApi = new InventoryApi();
-//    public List<CarDTO> cars = new ArrayList<>();
-//    public List<InventoryDTO> inventoryDTOS = new ArrayList<>();
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInventoryChart();
-        List<CarDTO> cars= carApi.getAllCars();
-        List<InventoryDTO> inventoryDTOS=  inventoryApi.getAllInventories();
+        List<CarDTO> cars = carApi.getAllCars();
+        List<InventoryDTO> inventoryDTOS = inventoryApi.getAllInventories();
         showCarBarChart(cars);
         showCountAllCars(cars);
         showTotalInventories(inventoryDTOS);
-        showCarBarChart(cars);
-        showCountAllCars(cars);
         loadRevenue();
     }
+
     private void loadRevenue() {
         new Thread(() -> {
             long revenue = orderApi.getRevenue();
@@ -152,7 +145,7 @@ public class AdminPageController implements Initializable {
 
     public void showCarBarChart(List<CarDTO> cars) {
         CarBarChart barChart = new CarBarChart(cars, "Phân phối xe theo trạng thái");
-        pieChartContainer.getChildren().add(barChart); // Line 73
+        pieChartContainer.getChildren().add(barChart);
         if (salesLineChartContainer == null) {
             System.err.println("salesLineChartContainer is null!");
             return;
@@ -160,13 +153,6 @@ public class AdminPageController implements Initializable {
         initOrderFlowChart();
     }
 
-    @FXML
-    private void handleChoiceBoxSelection(ActionEvent e) {
-//        String selectedBox = logChoice.getValue();
-//        if ("LogOut".equals(selectedBox)) {
-//            loadLoginPage();
-//        }
-    }
 
     @FXML
     public void initOrderFlowChart() {
@@ -226,7 +212,6 @@ public class AdminPageController implements Initializable {
     }
 
 
-
     public void initInventoryChart() {
         // Gán nhãn cho trục
         inventoryChartXAxis.setLabel("Tên kho");
@@ -264,7 +249,8 @@ public class AdminPageController implements Initializable {
         }
     }
 
-    private record Warehouse(String name, int capacity, int carCount) {}
+    private record Warehouse(String name, int capacity, int carCount) {
+    }
 
 
     private void showAlert(String title, String message) {
