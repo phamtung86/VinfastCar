@@ -22,4 +22,5 @@ public interface IOrderService {
     void createNewOrder(OrderDTO order);
 
     boolean updateOrder(OrderDTO orderDTO);
+    Long getRevenue();
 }

@@ -2,6 +2,7 @@ package com.vinfast.controller;
 
 import com.vinfast.api.CarApi;
 import com.vinfast.api.InventoryApi;
+import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.dto.OrderChartDTO;
@@ -9,6 +10,7 @@ import com.vinfast.ui.chart.CarBarChart;
 import com.vinfast.dto.InventoryDTO;
 import com.vinfast.dto.InventoryTopDTO;
 import com.vinfast.ui.chart.InventoryChart;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,6 +46,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminPageController implements Initializable {
+    private final OrderApi orderApi = new OrderApi();
+
     @FXML
     private HBox contentBox;
     @FXML
@@ -51,6 +55,8 @@ public class AdminPageController implements Initializable {
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
     @FXML
     private LineChart<String, Number> orderFlowchart;// Lưu contentBox gốc để khôi phục khi cần
+    @FXML
+    private Label revenueID;
     private void loadPage(String fxmlFile) {
         try {
             if (savedContentBox == null) {
@@ -105,6 +111,14 @@ public class AdminPageController implements Initializable {
         initInventoryChart();
         showCarBarChart();
         showCountAllCars();
+        loadRevenue();
+    }
+    private void loadRevenue() {
+        new Thread(() -> {
+            long revenue = orderApi.getRevenue();
+            String formatted = String.format("%,d VND", revenue); // Ví dụ: 123,456,789 VND
+            Platform.runLater(() -> revenueID.setText(formatted));
+        }).start();
     }
 
     public void showCountAllCars() {

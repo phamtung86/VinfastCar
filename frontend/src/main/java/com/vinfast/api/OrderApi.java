@@ -32,6 +32,26 @@ public class OrderApi {
         return mapper.readValue(response.body(), new TypeReference<>() {
         });
     }
+    public Long getRevenue() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/orders/Revenue"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                return Long.parseLong(response.body());
+            } else {
+                System.err.println("Lỗi khi lấy doanh thu: " + response.statusCode() + " - " + response.body());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0L; // Trả về 0 nếu có lỗi
+    }
+
     public OrderPageResponse getAllCarsByPages(int pageNumber, int size, String sort) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/orders/page?pageNumber=" + pageNumber + "&size=" + size + "&sort=" + sort))

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarService implements ICarService {
@@ -103,6 +104,37 @@ public class CarService implements ICarService {
     public Long countTotalCars() {
         return carRepository.count();
     }
+
+    @Override
+    public boolean updateCarStatus(Long id, String newStatus) {
+        Integer carId;
+        try {
+            carId = Math.toIntExact(id);
+        } catch (ArithmeticException e) {
+            System.err.println("ID quá lớn: " + id);
+            return false;
+        }
+
+        Optional<Car> optionalCar = carRepository.findById(carId);
+        if (optionalCar.isPresent()) {
+            Car car = optionalCar.get();
+            try {
+                Car.CarStatus statusEnum = Car.CarStatus.valueOf(newStatus.toUpperCase());
+                car.setCarStatus(statusEnum);
+                carRepository.save(car);
+                return true;
+            } catch (IllegalArgumentException e) {
+                // newStatus không hợp lệ
+                System.err.println("Trạng thái không hợp lệ: " + newStatus);
+                return false;
+            }
+        } else {
+            System.err.println("Không tìm thấy xe với id: " + id);
+            return false;
+        }
+    }
+
+
 
 
 }

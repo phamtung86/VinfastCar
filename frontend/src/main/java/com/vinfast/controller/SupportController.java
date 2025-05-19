@@ -294,7 +294,7 @@ public class SupportController implements Initializable {
 //
 //    }
 
-    public void addInvoice(ActionEvent actionEvent) {
+    public void addInvoice(ActionEvent actionEvent) throws IOException, InterruptedException {
         orderActionHandler.handleAddOrder();
         // Chức năng thêm hóa đơn nếu cần
     }
