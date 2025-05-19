@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -65,21 +66,31 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private HBox chartContainer;
-    @FXML
-    private ChoiceBox<String> logChoice;
+//    @FXML
+//    private ChoiceBox<String> logChoice;
 
     @FXML
     private VBox salesLineChartContainer;
     @FXML
     private VBox pieChartContainer;
+    @FXML
+    private Label countAllCars;
+
+
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
     private CarApi carApi = new CarApi();
     public List<CarDTO> cars = carApi.getAllCars();
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logChoice.setItems(list);
+//        logChoice.setItems(list);
         showCarBarChart();
+        showCountAllCars();
+    }
+
+    public void showCountAllCars() {
+        countAllCars.setText(String.valueOf(cars.size()));
     }
 
     public void showCarBarChart (){
@@ -94,10 +105,10 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private void handleChoiceBoxSelection(ActionEvent e) {
-        String selectedBox = logChoice.getValue();
-        if ("LogOut".equals(selectedBox)) {
-            loadLoginPage();
-        }
+//        String selectedBox = logChoice.getValue();
+//        if ("LogOut".equals(selectedBox)) {
+//            loadLoginPage();
+//        }
     }
 
     @FXML
@@ -145,8 +156,8 @@ public class AdminPageController implements Initializable {
             loginStage.initStyle(StageStyle.UNDECORATED); // Đặt không có viền cửa sổ
 
             // Lấy Stage hiện tại và đóng nó
-            Stage currentStage = (Stage) logChoice.getScene().getWindow();
-            currentStage.close();
+//            Stage currentStage = (Stage) logChoice.getScene().getWindow();
+//            currentStage.close();
 
             // Hiển thị cửa sổ login mới
             loginStage.show();
@@ -168,6 +179,26 @@ public class AdminPageController implements Initializable {
                 mainContainer.getChildren().set(index, savedContentBox); // Phục hồi contentBox gốc
                 contentBox = (HBox) savedContentBox; // Cập nhật lại tham chiếu
             }
+        }
+    }
+    @FXML
+    private void onMouseEntered(MouseEvent event) {
+        Object source = event.getSource();
+        if (source instanceof HBox) {
+            HBox hbox = (HBox) source;
+            // đổi màu nền khi hover
+            hbox.setStyle("-fx-background-color: #ADD8E6;"); // màu xanh nhạt ví dụ
+//            hbox.setPadding(Insets.EMPTY(= new (10)));
+        }
+    }
+
+    @FXML
+    private void onMouseExited(MouseEvent event) {
+        Object source = event.getSource();
+        if (source instanceof HBox) {
+            HBox hbox = (HBox) source;
+            // reset màu nền về mặc định (hoặc style css cũ)
+            hbox.setStyle("");
         }
     }
 
@@ -192,6 +223,5 @@ public class AdminPageController implements Initializable {
 
     public void moveToReport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Report.fxml");
-
     }
 }
