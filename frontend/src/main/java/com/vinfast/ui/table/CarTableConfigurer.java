@@ -23,7 +23,7 @@ public class CarTableConfigurer {
     private final TableColumn<CarDTO, Double> odoCol;
     private final TableColumn<CarDTO, Integer> yearCol;
     private final TableColumn<CarDTO, String> gearCol;
-    private final TableColumn<CarDTO, String> originalCol;
+    private final TableColumn<CarDTO, String> inventoryName;
     private final TableColumn<CarDTO, Long> priceCol;
     private final TableColumn<CarDTO, String> statusCol;
     private final TableColumn<CarDTO, String> engineCol;
@@ -43,7 +43,7 @@ public class CarTableConfigurer {
             TableColumn<CarDTO, Double> odoCol,
             TableColumn<CarDTO, Integer> yearCol,
             TableColumn<CarDTO, String> gearCol,
-            TableColumn<CarDTO, String> originalCol,
+            TableColumn<CarDTO, String> inventoryName,
             TableColumn<CarDTO, Long> priceCol,
             TableColumn<CarDTO, String> statusCol,
             TableColumn<CarDTO, String> engineCol
@@ -55,7 +55,7 @@ public class CarTableConfigurer {
         this.odoCol = odoCol;
         this.yearCol = yearCol;
         this.gearCol = gearCol;
-        this.originalCol = originalCol;
+        this.inventoryName = inventoryName;
         this.priceCol = priceCol;
         this.statusCol = statusCol;
         this.engineCol = engineCol;
@@ -68,7 +68,7 @@ public class CarTableConfigurer {
                 if (isNowHovered && !row.isEmpty()) {
                     CarDTO car = row.getItem();
                     String info = String.format(
-                            "Tên: %s\nODO: %.0f km\nNăm: %d\nHộp số: %s\nXuất xứ: %s\nGiá: %s\nĐộng cơ: %s\nTrạng thái: %s\nKiểu dáng: %s\nMàu ngoài: %s\nMàu trong: %s\nChỗ ngồi: %d\nCửa: %d\nDẫn động: %s",
+                            "Tên: %s\nODO: %.0f km\nNăm: %d\nHộp số: %s\nKho: %s\nGiá: %s\nĐộng cơ: %s\nTrạng thái: %s\nKiểu dáng: %s\nMàu ngoài: %s\nMàu trong: %s\nChỗ ngồi: %d\nCửa: %d\nDẫn động: %s",
                             car.getName(),
                             car.getOdo(),
                             car.getYear(),
@@ -102,7 +102,7 @@ public class CarTableConfigurer {
         odoCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.08));
         yearCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.07));
         gearCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.1));
-        originalCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.1));
+        inventoryName.prefWidthProperty().bind(carTable.widthProperty().multiply(0.1));
         priceCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.1));
         engineCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.15));
         statusCol.prefWidthProperty().bind(carTable.widthProperty().multiply(0.07));
@@ -114,7 +114,7 @@ public class CarTableConfigurer {
         odoCol.setStyle("-fx-alignment: CENTER;");
         yearCol.setStyle("-fx-alignment: CENTER;");
         gearCol.setStyle("-fx-alignment: CENTER;");
-        originalCol.setStyle("-fx-alignment: CENTER;");
+        inventoryName.setStyle("-fx-alignment: CENTER;");
         priceCol.setStyle("-fx-alignment: CENTER;");
         statusCol.setStyle("-fx-alignment: CENTER;");
         engineCol.setStyle("-fx-alignment: CENTER;");
@@ -127,7 +127,7 @@ public class CarTableConfigurer {
         odoCol.setCellValueFactory(new PropertyValueFactory<>("odo"));
         yearCol.setCellValueFactory(new PropertyValueFactory<>("year"));
         gearCol.setCellValueFactory(new PropertyValueFactory<>("gear"));
-        originalCol.setCellValueFactory(new PropertyValueFactory<>("original"));
+        inventoryName.setCellValueFactory(new PropertyValueFactory<>("inventoryName"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("carStatus"));
         engineCol.setCellValueFactory(new PropertyValueFactory<>("engine"));
@@ -162,7 +162,7 @@ public class CarTableConfigurer {
                 if (!empty && carStatus != null) {
                     createStatusIcon(carStatus).ifPresent(icon -> {
                         icon.setFitWidth(32);
-                        icon.setFitHeight(32);
+                        icon.setFitHeight(32 );
                         setGraphic(icon);
                     });
                 } else {

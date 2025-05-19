@@ -40,6 +40,28 @@ public class InventoryApi {
         return mapper.readValue(response.body(), InventoryPageResponse.class);
     }
 
+    public List<InventoryDTO> getAllInventories() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/inventories"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Kiểm tra mã trạng thái HTTP
+            if (response.statusCode() != 200) {
+                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<InventoryDTO>>() {
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+       return null;
+    }
+
     public int addInventory(InventoryDTO inventory) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();

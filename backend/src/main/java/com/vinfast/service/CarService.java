@@ -2,6 +2,7 @@ package com.vinfast.service;
 
 import com.vinfast.dto.CarDTO;
 import com.vinfast.entity.Car;
+import com.vinfast.entity.Inventory;
 import com.vinfast.form.CreateCarForm;
 import com.vinfast.repository.CarRepository;
 import org.modelmapper.ModelMapper;
@@ -23,11 +24,13 @@ public class CarService implements ICarService {
     private ModelMapper modelMapper;
     @Autowired
     private ILibraryService libraryService;
+    @Autowired
+    private IInventoryService inventoryService;
 
 
     @Override
     public List<CarDTO> getAllCars() {
-        List<Car> cars = carRepository.findAll();
+        List<Car> cars = carRepository.findAllWithLibrariesAndInventory();
         return modelMapper.map(cars, new TypeToken<List<CarDTO>>() {
         }.getType());
     }
@@ -68,16 +71,20 @@ public class CarService implements ICarService {
 
     @Override
     public Page<Car> getCarsByPage(Pageable pageable) {
-        return carRepository.findAll(pageable);
+        return carRepository.findAllDistinct(pageable);
     }
 
     @Transactional
     @Override
     public void createNewCar(CreateCarForm createCarForm) {
         Car car = modelMapper.map(createCarForm, Car.class);
+        car.setId(null);
         car.setCarStatus(Car.CarStatus.AVAILABLE);
+        Inventory inventory = inventoryService.getInventoryByID((long) createCarForm.getInventoryId());
+        if (inventory != null) {
+            car.setInventory(inventory);
+        }
         Car carResponse = carRepository.save(car);
-        System.out.println(carResponse.getId());
         libraryService.createLibrary(carResponse, createCarForm);
     }
 
@@ -91,5 +98,6 @@ public class CarService implements ICarService {
         }
         return false;
     }
+
 
 }

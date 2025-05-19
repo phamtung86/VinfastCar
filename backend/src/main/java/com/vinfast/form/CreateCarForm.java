@@ -34,6 +34,8 @@ public class CreateCarForm {
 
     private long price;
 
+    private Integer inventoryId;
+
     private List<MultipartFile> images;
 
     public String getName() {
@@ -156,6 +158,14 @@ public class CreateCarForm {
         this.images = images;
     }
 
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
+
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
     @Override
     public String toString() {
         return "CreateCarForm{" +
@@ -173,6 +183,7 @@ public class CreateCarForm {
                 ", slotDoor=" + slotDoor +
                 ", driveTrain='" + driveTrain + '\'' +
                 ", price=" + price +
+                ", inventoryId=" + inventoryId +
                 ", images=" + images +
                 '}';
     }

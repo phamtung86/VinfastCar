@@ -46,7 +46,7 @@ public class Car {
     @Column(name = "car_status")
     private CarStatus carStatus;
 
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Library> libraries;
 
