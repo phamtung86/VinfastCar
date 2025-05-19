@@ -1,6 +1,9 @@
 package com.vinfast.ui.customer;
 
+import com.vinfast.api.CustomerApi;
 import javafx.scene.control.Alert;
+
+import java.util.List;
 
 public class Notifications {
     public static boolean validateName(String name) {
@@ -64,6 +67,22 @@ public class Notifications {
             return false;
         }
         return true;
+    }
+
+    public static boolean isEmailExistOnline(String email) {
+        if (CustomerApi.isEmailExist(email)) {
+            showAlert("Cảnh báo", "Email này đã tồn tại trong hệ thống!");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isPhoneExistOnline(String phone) {
+        if (CustomerApi.isPhoneExist(phone)) {
+            showAlert("Cảnh báo", "Số điện thoại này đã tồn tại trong hệ thống!");
+            return true;
+        }
+        return false;
     }
 
     private static void showAlert(String header, String message) {
