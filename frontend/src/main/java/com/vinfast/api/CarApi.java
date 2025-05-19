@@ -47,6 +47,30 @@ public class CarApi {
 
             HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
 
+            // Kiểm tra mã trạng thái HTTP
+            if (response.statusCode() != 200) {
+                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<CarDTO> getCarByStatus(String status)  {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars/status?status=" + status ))
+
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
             if (response.statusCode() != 200) {
                 throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
             }
@@ -54,7 +78,9 @@ public class CarApi {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
             });
-        } catch (Exception e) {
+
+        } catch (Exception e){
+
             e.printStackTrace();
         }
         return null;

@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.LoginController">
    <right>
-      <VBox prefWidth="380.0" styleClass="vbox_background_right" stylesheets="@style/Login.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="460.0" prefWidth="373.0" styleClass="vbox_background_right" stylesheets="@style/Login.css" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="340.0">
                <children>
@@ -50,11 +50,11 @@
          </opaqueInsets></VBox>
    </right>
    <center>
-      <VBox prefWidth="450.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="462.0" prefWidth="491.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="462.0" fitWidth="620.0" pickOnBounds="true" VBox.vgrow="ALWAYS">
+            <ImageView fitHeight="461.0" fitWidth="827.0" nodeOrientation="INHERIT" pickOnBounds="true" smooth="false" VBox.vgrow="ALWAYS">
                <image>
-                  <Image url="@image/Banner_login.jpg" />
+                  <Image url="@image/Screenshot%202025-05-09%20103042.png" />
                </image></ImageView>
          </children></VBox>
    </center>
