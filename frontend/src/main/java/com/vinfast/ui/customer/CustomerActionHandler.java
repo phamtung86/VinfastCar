@@ -95,11 +95,13 @@ public class CustomerActionHandler {
 
             if (!Notifications.validateName(name.getText()) ||
                     !Notifications.validatePhone(phone.getText()) ||
+                    Notifications.isPhoneExistOnline(phone.getText()) ||
                     !Notifications.validateEmail(email.getText()) ||
+                    Notifications.isEmailExistOnline(email.getText()) ||
                     !Notifications.validateAddress(address.getText()) ||
                     !Notifications.validatePaymentMethod(payment) ||
                     !Notifications.validateStatus(stat) ||
-                    Notifications.validateCarId(idCar.getText())) {
+                    !Notifications.validateCarId(idCar.getText())) {
                 event.consume(); // Chặn đóng nếu sai
             }
         });
@@ -188,7 +190,9 @@ public class CustomerActionHandler {
         saveButton.addEventFilter(ActionEvent.ACTION, event -> {
             if (!Notifications.validateName(name.getText()) ||
                     !Notifications.validatePhone(phone.getText()) ||
+                    Notifications.isPhoneExistOnline(phone.getText()) ||
                     !Notifications.validateEmail(email.getText()) ||
+                    Notifications.isEmailExistOnline(email.getText()) ||
                     !Notifications.validateAddress(address.getText())) {
                 event.consume();
             }

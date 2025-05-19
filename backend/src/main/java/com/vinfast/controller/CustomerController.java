@@ -4,6 +4,10 @@ import com.vinfast.dto.CustomerDTO;
 import com.vinfast.dto.OrderDTO;
 import com.vinfast.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,5 +83,34 @@ public class CustomerController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/paging")
+    public ResponseEntity<?> getCustomersPaging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<CustomerDTO> customerPage = customerService.getAllCustomersToPage(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("customers", customerPage.getContent());
+        response.put("currentPage", customerPage.getNumber());
+        response.put("totalItems", customerPage.getTotalElements());
+        response.put("totalPages", customerPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmailExists(@RequestParam String email) {
+        boolean exists = customerService.emailExists(email);
+        return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/check-phone")
+    public ResponseEntity<Boolean> checkPhoneExists(@RequestParam String phone) {
+        boolean exists = customerService.phoneExists(phone);
+        return ResponseEntity.ok(exists);
     }
 }

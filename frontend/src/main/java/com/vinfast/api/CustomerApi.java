@@ -9,9 +9,11 @@ import com.vinfast.dto.OrderDTO;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -237,5 +239,78 @@ public class CustomerApi {
         }
         return false;
     }
+
+    public static List<CustomerDTO> getCustomersByPage(int page, int size) {
+        try {
+            String url = String.format("%s/api/v1/customers/paging?page=%d&size=%d", ApiConfig.BASE_URL, page, size);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                // Phân tích phản hồi JSON {"customers": [...], "currentPage": ..., ...}
+                Map<String, Object> map = mapper.readValue(response.body(), new TypeReference<Map<String, Object>>() {});
+                String customersJson = mapper.writeValueAsString(map.get("customers")); // Lấy phần "customers"
+                return mapper.readValue(customersJson, new TypeReference<List<CustomerDTO>>() {});
+            } else {
+                System.err.println("Lỗi lấy danh sách có phân trang. Mã phản hồi: " + response.statusCode());
+                System.err.println("Nội dung phản hồi: " + response.body());
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Lỗi khi gọi API phân trang:");
+            e.printStackTrace();
+        }
+
+        return List.of();
+    }
+
+    public static boolean isEmailExist(String email) {
+        try {
+            String url = String.format("%s/api/v1/customers/check-email?email=%s",
+                    ApiConfig.BASE_URL,
+                    URLEncoder.encode(email, StandardCharsets.UTF_8));
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            return Boolean.parseBoolean(response.body());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isPhoneExist(String phone) {
+        try {
+            String url = String.format("%s/api/v1/customers/check-phone?phone=%s",
+                    ApiConfig.BASE_URL,
+                    URLEncoder.encode(phone, StandardCharsets.UTF_8));
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            return Boolean.parseBoolean(response.body());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

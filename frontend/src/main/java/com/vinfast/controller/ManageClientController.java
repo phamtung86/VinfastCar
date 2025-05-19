@@ -30,6 +30,13 @@ public class ManageClientController implements Initializable {
     @FXML private TableColumn<CustomerDTO, String> colCreatedAt;
     @FXML private TableColumn<CustomerDTO, String> colOrderCount;
 
+    @FXML private Button btnPrev;
+    @FXML private Button btnNext;
+    @FXML private Label lblPage;
+
+    private int page = 0;
+    private final  int sizePage = 10;
+
     @FXML
     private Pane boxFeatureSearch;
 
@@ -47,8 +54,11 @@ public class ManageClientController implements Initializable {
     private void loadAPI(){
         new Thread(() -> {
             try {
-                List<CustomerDTO> customers = CustomerApi.getAllCustomers();
-                Platform.runLater(() -> customerTable.setItems(FXCollections.observableArrayList(customers)));
+                List<CustomerDTO> customers = CustomerApi.getCustomersByPage(page, sizePage);
+                Platform.runLater(() -> {
+                    customerTable.setItems(FXCollections.observableArrayList(customers));
+                    lblPage.setText("Trang: " + (page + 1));
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -184,7 +194,7 @@ public class ManageClientController implements Initializable {
     }
 
     @FXML
-    public void handleRefresh() {
+    private void handleRefresh() {
         ((TextField) boxFeatureSearch.getChildren().get(0)).clear();
         customerTable.getItems().clear();
         CustomerActionHandler.loadAllCustomers(customerTable);
@@ -192,5 +202,34 @@ public class ManageClientController implements Initializable {
 
     private void showCustomerDetail() {
         viewDetail.showDetail(customerTable.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    private void previousPage() {
+        if (page > 0) {
+            page--;
+            loadAPI();
+        }
+
+    }
+
+    @FXML
+    private void nextPage() {
+        page++;
+        new Thread(() -> {
+            List<CustomerDTO> customers = CustomerApi.getCustomersByPage(page, sizePage);
+            if (!customers.isEmpty()) {
+                Platform.runLater(() -> {
+                    customerTable.setItems(FXCollections.observableArrayList(customers));
+                    lblPage.setText("Trang: " + (page + 1));
+                });
+            } else {
+                page--; // Không có dữ liệu → lùi lại
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Không còn trang tiếp theo.");
+                    alert.showAndWait();
+                });
+            }
+        }).start();
     }
 }
