@@ -368,7 +368,7 @@
                                                                 <NumberAxis side="LEFT" />
                                                             </yAxis>
                                                         </LineChart>
-                                                        <StackedBarChart prefHeight="158.0" prefWidth="350.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
+                                                        <StackedBarChart prefHeight="158.0" prefWidth="378.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>

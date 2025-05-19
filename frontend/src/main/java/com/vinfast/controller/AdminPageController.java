@@ -5,6 +5,7 @@ import com.vinfast.api.CarApi;
 import com.vinfast.api.InventoryApi;
 import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
+import com.vinfast.dto.InventoryDTO;
 import com.vinfast.dto.InventoryTopDTO;
 import com.vinfast.dto.OrderChartDTO;
 import com.vinfast.ui.chart.CarBarChart;
@@ -109,18 +110,28 @@ public class AdminPageController implements Initializable {
     @FXML
     private HBox report;
 
+    @FXML
+    private Label totalInventories;
+
 
 
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
-    private CarApi carApi = new CarApi();
-    public List<CarDTO> cars = carApi.getAllCars();
+    private final CarApi carApi = new CarApi();
+    private final InventoryApi inventoryApi = new InventoryApi();
+//    public List<CarDTO> cars = new ArrayList<>();
+//    public List<InventoryDTO> inventoryDTOS = new ArrayList<>();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInventoryChart();
-        showCarBarChart();
-        showCountAllCars();
+        List<CarDTO> cars= carApi.getAllCars();
+        List<InventoryDTO> inventoryDTOS=  inventoryApi.getAllInventories();
+        showCarBarChart(cars);
+        showCountAllCars(cars);
+        showTotalInventories(inventoryDTOS);
+        showCarBarChart(cars);
+        showCountAllCars(cars);
         loadRevenue();
     }
     private void loadRevenue() {
@@ -131,11 +142,15 @@ public class AdminPageController implements Initializable {
         }).start();
     }
 
-    public void showCountAllCars() {
+    public void showCountAllCars(List<CarDTO> cars) {
         countAllCars.setText(String.valueOf(cars.size()));
     }
 
-    public void showCarBarChart() {
+    public void showTotalInventories(List<InventoryDTO> inventoryDTOS) {
+        totalInventories.setText(String.valueOf(inventoryDTOS.size()));
+    }
+
+    public void showCarBarChart(List<CarDTO> cars) {
         CarBarChart barChart = new CarBarChart(cars, "Phân phối xe theo trạng thái");
         pieChartContainer.getChildren().add(barChart); // Line 73
         if (salesLineChartContainer == null) {
