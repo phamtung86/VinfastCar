@@ -2,6 +2,8 @@ package com.vinfast.controller;
 
 import com.vinfast.api.CarApi;
 import com.vinfast.dto.CarDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vinfast.dto.OrderChartDTO;
 import com.vinfast.ui.chart.CarBarChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +14,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -21,7 +26,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,7 +41,8 @@ public class AdminPageController implements Initializable {
     @FXML
     private VBox mainContainer;
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
-
+    @FXML
+    private LineChart<String, Number> orderFlowchart;// Lưu contentBox gốc để khôi phục khi cần
     private void loadPage(String fxmlFile) {
         try {
             if (savedContentBox == null) {
@@ -55,21 +66,31 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private HBox chartContainer;
-    @FXML
-    private ChoiceBox<String> logChoice;
+//    @FXML
+//    private ChoiceBox<String> logChoice;
 
     @FXML
     private VBox salesLineChartContainer;
     @FXML
     private VBox pieChartContainer;
+    @FXML
+    private Label countAllCars;
+
+
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
     private CarApi carApi = new CarApi();
     public List<CarDTO> cars = carApi.getAllCars();
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logChoice.setItems(list);
+//        logChoice.setItems(list);
         showCarBarChart();
+        showCountAllCars();
+    }
+
+    public void showCountAllCars() {
+        countAllCars.setText(String.valueOf(cars.size()));
     }
 
     public void showCarBarChart (){
@@ -79,16 +100,49 @@ public class AdminPageController implements Initializable {
             System.err.println("salesLineChartContainer is null!");
             return;
         }
+        initOrderFlowChart();
     }
 
     @FXML
     private void handleChoiceBoxSelection(ActionEvent e) {
-        String selectedBox = logChoice.getValue();
-        if ("LogOut".equals(selectedBox)) {
-            loadLoginPage();
-        }
+//        String selectedBox = logChoice.getValue();
+//        if ("LogOut".equals(selectedBox)) {
+//            loadLoginPage();
+//        }
     }
 
+    @FXML
+    public void initOrderFlowChart() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Số đơn hàng theo ngày");
+
+        try {
+            // Gọi API
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/api/v1/orders/chart-data"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            // Parse JSON
+            ObjectMapper mapper = new ObjectMapper();
+            List<OrderChartDTO> data = Arrays.asList(
+                    mapper.readValue(response.body(), OrderChartDTO[].class)
+            );
+
+            // Thêm dữ liệu vào chart
+            for (OrderChartDTO dto : data) {
+                series.getData().add(new XYChart.Data<>(dto.getDate(), dto.getCount()));
+            }
+
+            orderFlowchart.getData().add(series);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     private void loadLoginPage() {
         try {
             // Load trang Login
@@ -102,8 +156,8 @@ public class AdminPageController implements Initializable {
             loginStage.initStyle(StageStyle.UNDECORATED); // Đặt không có viền cửa sổ
 
             // Lấy Stage hiện tại và đóng nó
-            Stage currentStage = (Stage) logChoice.getScene().getWindow();
-            currentStage.close();
+//            Stage currentStage = (Stage) logChoice.getScene().getWindow();
+//            currentStage.close();
 
             // Hiển thị cửa sổ login mới
             loginStage.show();
@@ -125,6 +179,26 @@ public class AdminPageController implements Initializable {
                 mainContainer.getChildren().set(index, savedContentBox); // Phục hồi contentBox gốc
                 contentBox = (HBox) savedContentBox; // Cập nhật lại tham chiếu
             }
+        }
+    }
+    @FXML
+    private void onMouseEntered(MouseEvent event) {
+        Object source = event.getSource();
+        if (source instanceof HBox) {
+            HBox hbox = (HBox) source;
+            // đổi màu nền khi hover
+            hbox.setStyle("-fx-background-color: #ADD8E6;"); // màu xanh nhạt ví dụ
+//            hbox.setPadding(Insets.EMPTY(= new (10)));
+        }
+    }
+
+    @FXML
+    private void onMouseExited(MouseEvent event) {
+        Object source = event.getSource();
+        if (source instanceof HBox) {
+            HBox hbox = (HBox) source;
+            // reset màu nền về mặc định (hoặc style css cũ)
+            hbox.setStyle("");
         }
     }
 
@@ -149,6 +223,5 @@ public class AdminPageController implements Initializable {
 
     public void moveToReport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Report.fxml");
-
     }
 }

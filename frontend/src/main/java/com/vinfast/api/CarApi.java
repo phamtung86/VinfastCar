@@ -47,12 +47,13 @@ public class CarApi {
 
             HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
 
+            // Kiểm tra mã trạng thái HTTP
             if (response.statusCode() != 200) {
                 throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
             }
-
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
+
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +61,53 @@ public class CarApi {
         return null;
     }
 
+    public List<CarDTO> getCarByStatus(String status)  {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars/status?status=" + status ))
+
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
+            });
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+//    public int countAllCars() {
+//        try {
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars/count"))
+//                    .GET()
+//                    .build();
+//
+//            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+//
+//            if (response.statusCode() != 200) {
+//                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+//            }
+//
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(response.body(), new TypeReference<Integer>() {
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+//    }
+//
 
     public void addCar(CarDTO car, List<File> imageFiles) {
         String boundary = Long.toHexString(System.currentTimeMillis()); // Tạo một boundary ngẫu nhiên

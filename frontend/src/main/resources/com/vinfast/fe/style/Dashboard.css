@@ -14,7 +14,18 @@
     -fx-background-color:white;
     -fx-text-fill: black;
 }
+.side-bar-left{
+    -fx-background-color: #ffffff;
+    -fx-font-weight: bold;
+}
 
+.side-bar-left-item{
+    -fx-padding: 10;
+}
+
+.side-bar-right{
+    -fx-padding: 10;
+}
 /* Khi rê chuột vào một mục */
 .choice-box .menu-item:hover {
     -fx-background-color: #DCDCDC;
@@ -30,23 +41,24 @@
     -fx-translate-x: -10px;
     -fx-background-color: rgba(0,0,0,0);
 }
-.lableItems:hover {
-    -fx-scale-x: 1.1;  /* Phóng to theo chiều ngang */
-    -fx-scale-y: 1.1;  /* Phóng to theo chiều dọc */
-    -fx-font-weight: bold;  /* In đậm chữ */
-    -fx-transition: all 0.3s ease-in-out;
+.lable-items {
+    -fx-font-weight: bold;
+
 }
 .card{
     -fx-background-color:#fff;
     -fx-background-radius:10;
+    -fx-effect: dropshadow(gaussian, rgba(204, 204, 204, 0.5), 10, 0.5, 5, 5);
 }
 .card2{
-    -fx-background-color:#AFEEEE;
+    -fx-background-color:#fff;
     -fx-background-radius:10;
+    -fx-effect: dropshadow(gaussian, rgba(204, 204, 204, 0.5), 10, 0.5, 5, 5);
 }
 .card3{
-    -fx-background-color:#D8BFD8;
+    -fx-background-color:#fff;
     -fx-background-radius:10;
+    -fx-effect: dropshadow(gaussian, rgba(204, 204, 204, 0.5), 10, 0.5, 5, 5);
 }
 .rounded-image {
     -fx-background-radius: 50;  /* Bo tròn góc */

@@ -6,10 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-
+import com.vinfast.entity.Customer;
 public interface ICustomerService {
     List<CustomerDTO> getAllCustomers();
 
+    Customer findCustomerById(Long customerId);
     CustomerDTO getCustomerById(Long id);
 
     CustomerDTO addCustomer(CustomerDTO customer);

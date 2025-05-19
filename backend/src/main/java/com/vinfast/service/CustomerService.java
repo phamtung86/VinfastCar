@@ -44,6 +44,11 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
+    public Customer findCustomerById(Long customerId) {
+        return customerRepository.findById(customerId).orElse(null);
+    }
+
+    @Override
     public Page<CustomerDTO> getAllCustomersToPage(Pageable pageable) {
         Page<Customer> customers = customerRepository.findAll(pageable);
         return customers.map(convertDTO::convertToCustomerDTO);

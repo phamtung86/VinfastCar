@@ -99,5 +99,10 @@ public class CarService implements ICarService {
         return false;
     }
 
+    @Override
+    public Long countTotalCars() {
+        return carRepository.count();
+    }
+
 
 }

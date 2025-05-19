@@ -93,4 +93,10 @@ public class CarController {
         CarDTO carDTO = carService.getCarById(id);
         return (carDTO != null) ? ResponseEntity.ok(carDTO) : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<?> countAllCars(){
+        Long total = carService.countTotalCars();
+        return ResponseEntity.ok(total);
+    }
 }
