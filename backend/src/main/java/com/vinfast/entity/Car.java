@@ -51,9 +51,10 @@ public class Car {
     @Column(name = "car_status")
     private CarStatus carStatus;
 
-    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @Fetch(FetchMode.SUBSELECT)
     private List<Library> libraries;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inventory_id", referencedColumnName = "id")

@@ -21,6 +21,10 @@
 
 .side-bar-left-item{
     -fx-padding: 10;
+    -fx-cursor: hand;
+}
+.side-bar-left-item:hover{
+    -fx-background-color: #80cbfa;
 }
 
 .side-bar-right{
@@ -43,7 +47,6 @@
 }
 .lable-items {
     -fx-font-weight: bold;
-
 }
 .card{
     -fx-background-color:#fff;

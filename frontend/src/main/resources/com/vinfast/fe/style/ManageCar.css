@@ -28,3 +28,11 @@
     -fx-background-color: #69dd06;
     -fx-cursor: HAND;
 }
+.btn-pre{
+    -fx-background-color: white;
+    -fx-cursor: hand;
+}
+.btn-next{
+    -fx-background-color: white;
+    -fx-cursor: hand;
+}
