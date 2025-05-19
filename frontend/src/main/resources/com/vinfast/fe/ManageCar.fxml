@@ -99,7 +99,7 @@
                         <TableColumn fx:id="odoCol" text="Odo" />
                         <TableColumn fx:id="yearCol" text="Năm" />
                         <TableColumn fx:id="gearCol" text="Hộp số" />
-                        <TableColumn fx:id="originalCol" text="Xuất xứ" />
+                        <TableColumn fx:id="originalCol" text="Kho" />
                         <TableColumn fx:id="priceCol" text="Giá" />
                         <TableColumn fx:id="engineCol" text="Động cơ" />
                         <TableColumn fx:id="statusCol" text="Trạng thái" />

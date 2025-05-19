@@ -14,6 +14,9 @@ public interface IInventoryService {
     boolean createAInventory(CreateInventoryForm createInventoryForm);
     boolean updateInventoryByID(InventoryDTO inventoryDTO);
     boolean deleteAInventoryByID(int id);
-
     List<IInventoryTopModel> getTopInventory();
+
+    List<InventoryDTO> getAllInventory();
+
+    Inventory getInventoryByID(Long id);
 }

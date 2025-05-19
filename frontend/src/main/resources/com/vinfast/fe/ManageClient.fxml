@@ -17,53 +17,75 @@
                         </font></TextField>
                 </children>
             </AnchorPane>
-            <HBox fx:id="boxFeature" prefHeight="29.0" prefWidth="943.0" style="-fx-background-color: white;">
-                <children>
-                    <Pane fx:id="boxFeatureSearch" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
-                        <children>
-                            <TextField layoutX="14.0" layoutY="9.0" prefHeight="25.0" prefWidth="474.0" promptText="Nhập vào tên khách hàng" />
-                            <Button fx:id="btnSearchCustomer" layoutX="510.0" layoutY="7.0" onAction="#handleSearchCustomer" prefHeight="25.0" styleClass="btn-search" text="Tìm Kiếm" textFill="WHITE">
-                                <graphic>
-                                    <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                        <image>
-                                            <Image url="@icon/find.png" />
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <font>
-                                    <Font name="System Bold" size="12.0" />
-                                </font>
-                            </Button>
 
-                            <!-- Nút làm mới -->
-                            <Button fx:id="btnRefresh" layoutX="628.0" layoutY="7.0" onAction="#handleRefreshTable" prefHeight="25.0" styleClass="btn-refresh" text="Làm mới" textFill="WHITE">
-                                <graphic>
-                                    <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                        <image>
-                                            <Image url="@icon/refresh.png" />
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <font>
-                                    <Font name="System Bold" size="12.0" />
-                                </font>
-                            </Button>
-                        </children>
-                        <padding>
-                            <Insets top="5.0" />
-                        </padding>
-                    </Pane>
+            <HBox fx:id="boxFeatureSearch" spacing="10" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+                <padding>
+                    <Insets top="5" bottom="5" left="5" />
+                </padding>
+                <children>
+                    <TextField fx:id="txtSearchCustomer" prefWidth="300.0" maxWidth="500.0" onAction="#handleSearch" promptText="Nhập vào tên khách hàng" />
+
+                    <Button fx:id="btnSearchCustomer" onAction="#handleSearch" text="Tìm Kiếm" textFill="WHITE" styleClass="btn-search">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="23.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@icon/find.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="btnAddCustomer" onAction="#handleAdd" text="Thêm" textFill="#fcfcfc" styleClass="btn-add">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="37.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@icon/add-button.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="btnEditCustomer" onAction="#handleUpdate" text="Sửa" styleClass="btn-modify">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="25.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@icon/edit-button.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="btnDeleteCustomer" onAction="#handleDelete" text="Xóa" textFill="#f5f2f2" styleClass="btn-delete">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="24.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@icon/bin.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="btnRefreshCustomer" onAction="#handleRefresh" text="Làm mới" textFill="WHITE" styleClass="btn-refresh">
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="23.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@icon/refresh.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
                 </children>
             </HBox>
+
             <AnchorPane VBox.vgrow="ALWAYS">
                 <children>
-                    <TableView fx:id="customerTable" prefHeight="411.0" prefWidth="819.0" style="-fx-text-fill: black;">
+                    <TableView fx:id="customerTable" prefHeight="411.0" prefWidth="819.0" style="-fx-text-fill: black;" styleClass="row-view">
                         <AnchorPane.topAnchor>0.0</AnchorPane.topAnchor>
-                        <AnchorPane.bottomAnchor>0.0</AnchorPane.bottomAnchor>
-                        <AnchorPane.leftAnchor>0.0</AnchorPane.leftAnchor>
-                        <AnchorPane.rightAnchor>0.0</AnchorPane.rightAnchor>
+                        <AnchorPane.bottomAnchor>4.0</AnchorPane.bottomAnchor>
+                        <AnchorPane.leftAnchor>5.0</AnchorPane.leftAnchor>
+                        <AnchorPane.rightAnchor>5.0</AnchorPane.rightAnchor>
                         <columns>
-                            <TableColumn fx:id="colId" prefWidth="20" text="ID" />
+                            <TableColumn fx:id="colId" prefWidth="20" text="Mã" />
                             <TableColumn fx:id="colName" prefWidth="100" text="Họ tên" />
                             <TableColumn fx:id="colPhone" prefWidth="85" text="Số điện thoại" />
                             <TableColumn fx:id="colEmail" prefWidth="100" text="Email" />
@@ -74,6 +96,16 @@
                     </TableView>
                 </children>
             </AnchorPane>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets top="5" bottom="5"/>
+                </padding>
+
+                <Button fx:id="btnPrev" onAction="#previousPage" text="← Trước" />
+                <Label fx:id="lblPage" text="Trang 1" />
+                <Button fx:id="btnNext" onAction="#nextPage" text="Sau →" />
+            </HBox>
         </VBox>
     </children>
 </HBox>
