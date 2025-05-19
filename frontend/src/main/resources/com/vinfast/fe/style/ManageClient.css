@@ -33,6 +33,5 @@
 }
 
 .row-view{
-    -fx-fixed-cell-size: 44.8px; /* Có thể dùng nếu không cần tính toán tự động */
-    /*nếu có phân trang thì để tầm 43 44*/
+    -fx-fixed-cell-size: 59.4px;
 }

@@ -11,6 +11,8 @@ import com.vinfast.repository.CustomerRepository;
 import com.vinfast.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,6 +41,12 @@ public class CustomerService implements ICustomerService{
         return customers.stream()
                 .map(convertDTO::convertToCustomerDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<CustomerDTO> getAllCustomersToPage(Pageable pageable) {
+        Page<Customer> customers = customerRepository.findAll(pageable);
+        return customers.map(convertDTO::convertToCustomerDTO);
     }
 
     @Override
@@ -168,5 +176,13 @@ public class CustomerService implements ICustomerService{
         orderRepository.delete(order);
 
         return convertDTO.convertToCustomerDTO(customer);
+    }
+
+    public boolean emailExists(String email) {
+        return customerRepository.existsByEmail(email);
+    }
+
+    public boolean phoneExists(String phone) {
+        return customerRepository.existsByPhone(phone);
     }
 }

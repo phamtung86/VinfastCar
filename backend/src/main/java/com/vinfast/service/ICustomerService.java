@@ -2,6 +2,8 @@ package com.vinfast.service;
 
 import com.vinfast.dto.CustomerDTO;
 import com.vinfast.dto.OrderDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,4 +24,9 @@ public interface ICustomerService {
 
     CustomerDTO deleteOrder(Long customerId, Long orderId);
 
+    Page<CustomerDTO> getAllCustomersToPage(Pageable pageable);
+
+    boolean emailExists(String email);
+
+    boolean phoneExists(String phone);
 }
