@@ -2,9 +2,9 @@ package com.vinfast.controller;
 
 import com.vinfast.api.CarApi;
 import com.vinfast.dto.CarDTO;
-import com.vinfast.ui.chart.CarPieChart;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.dto.OrderChartDTO;
+import com.vinfast.ui.chart.CarBarChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,15 +73,18 @@ public class AdminPageController implements Initializable {
     @FXML
     private VBox pieChartContainer;
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
-    private CarApi carApi;
+    private CarApi carApi = new CarApi();
+    public List<CarDTO> cars = carApi.getAllCars();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        carApi = new CarApi();
         logChoice.setItems(list);
-        List<CarDTO> cars = carApi.getAllCars();
-        CarPieChart pieChart = new CarPieChart(cars, "Phân phối xe theo trạng thái");
-        pieChartContainer.getChildren().add(pieChart); // Line 73
+        showCarBarChart();
+    }
+
+    public void showCarBarChart (){
+        CarBarChart barChart = new CarBarChart(cars, "Phân phối xe theo trạng thái");
+        pieChartContainer.getChildren().add(barChart); // Line 73
         if (salesLineChartContainer == null) {
             System.err.println("salesLineChartContainer is null!");
             return;
