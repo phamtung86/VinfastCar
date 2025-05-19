@@ -5,6 +5,7 @@ import com.vinfast.entity.Inventory;
 import com.vinfast.form.CreateInventoryForm;
 import com.vinfast.models.IInventoryTopModel;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.vinfast.repository.InventoryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,6 +59,18 @@ public class InventoryService implements IInventoryService {
         PageRequest page = PageRequest.of(0, 5);  // Lấy 5 kết quả đầu tiên
         List<IInventoryTopModel> result = _inventoryRepository.findTopInventories(page);
         return result;
+    }
+
+    @Override
+    public List<InventoryDTO> getAllInventory() {
+        List<Inventory> inventories = _inventoryRepository.findAll();
+
+        return _modelMapper.map(inventories, new TypeToken<List<InventoryDTO>>(){}.getType());
+    }
+
+    @Override
+    public Inventory getInventoryByID(Long id) {
+        return _inventoryRepository.findById(id).get();
     }
 
     /*

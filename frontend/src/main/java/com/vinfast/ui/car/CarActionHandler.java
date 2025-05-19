@@ -1,7 +1,9 @@
 package com.vinfast.ui.car;
 
 import com.vinfast.api.CarApi;
+import com.vinfast.api.InventoryApi;
 import com.vinfast.dto.CarDTO;
+import com.vinfast.dto.InventoryDTO;
 import com.vinfast.dto.LibraryDTO;
 import com.vinfast.ui.alert.AlertNotice;
 import javafx.application.Platform;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CarActionHandler {
     private final TableView<CarDTO> carTable;
@@ -25,9 +28,11 @@ public class CarActionHandler {
     private final List<String> driveTrainOptions = Arrays.asList("FWD", "RWD", "AWD");
     private final List<String> gearOptions = Arrays.asList("Số sàn", "Số tự động");
     private final List<String> styleOptions = Arrays.asList("Hatchback", "Sedan", "SUV", "Crossover (CUV)", "MPV", "Pickup");
-    private final List<String> statusOptions = Arrays.asList("AVAILABLE", "RESERVED","SOLD", "DELIVERED");
+    private final List<String> statusOptions = Arrays.asList("AVAILABLE", "RESERVED", "SOLD", "DELIVERED");
     private AlertNotice alertNotice = new AlertNotice();
     private final CarApi carApi = new CarApi();
+    private final InventoryApi inventoryApi = new InventoryApi();
+    private List<InventoryDTO> inventoryDTOS = inventoryApi.getAllInventories();
 
     public CarActionHandler(TableView<CarDTO> carTable, Consumer<List<CarDTO>> updateTableCallback) {
         this.carTable = carTable;
@@ -35,6 +40,7 @@ public class CarActionHandler {
     }
 
     public void handleAddCar() {
+
         Dialog<CarDTO> dialog = new Dialog<>();
         dialog.setTitle("Thêm Xe Mới");
         dialog.setHeaderText("Nhập thông tin xe mới");
@@ -80,6 +86,16 @@ public class CarActionHandler {
 
         ComboBox<String> driveTrainField = new ComboBox<>(FXCollections.observableArrayList(driveTrainOptions));
         driveTrainField.setPromptText("Dẫn động");
+
+        List<String> inventoryNames = inventoryDTOS.stream()
+                .map(inventory -> inventory.getId() + " - " + inventory.getName())
+                .collect(Collectors.toList());
+
+
+        // Tạo ComboBox từ danh sách tên kho
+        ComboBox<String> inventoryField = new ComboBox<>(FXCollections.observableArrayList(inventoryNames));
+        inventoryField.setPromptText("Tên kho");
+
 
         List<LibraryDTO> imageLibraries = new ArrayList<>();
         List<File> selectedFiles = new ArrayList<>();
@@ -152,7 +168,10 @@ public class CarActionHandler {
         grid.add(driveTrainField, 1, 12);
         grid.add(new Label("Ảnh:"), 0, 13);
         grid.add(chooseImageButton, 1, 13);
-        grid.add(imageListView, 1, 14);
+        grid.add(new Label("Kho:"), 0, 14);
+        grid.add(inventoryField, 1, 14);
+        grid.add(imageListView, 1, 15);
+
 
         dialog.getDialogPane().setContent(grid);
 
@@ -175,6 +194,8 @@ public class CarActionHandler {
                     newCar.setSlotSeats(Integer.parseInt(slotSeatsField.getText()));
                     newCar.setSlotDoor(Integer.parseInt(slotDoorField.getText()));
                     newCar.setDriveTrain(driveTrainField.getValue());
+                    Integer inventoryId = Integer.parseInt(inventoryField.getValue().split("-")[0].trim());
+                    newCar.setInventoryId(inventoryId);
                     return newCar;
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -237,6 +258,14 @@ public class CarActionHandler {
             TextField slotDoorField = new TextField(String.valueOf(selectedCar.getSlotDoor()));
             ComboBox<String> driveTrainField = new ComboBox<>(FXCollections.observableArrayList(driveTrainOptions));
             driveTrainField.setValue(selectedCar.getDriveTrain());
+            List<String> inventoryNames = inventoryDTOS.stream()
+                    .map(inventory -> inventory.getId() + " - " + inventory.getName())
+                    .collect(Collectors.toList());
+
+
+            // Tạo ComboBox từ danh sách tên kho
+            ComboBox<String> inventoryField = new ComboBox<>(FXCollections.observableArrayList(inventoryNames));
+            inventoryField.setPromptText("Tên kho");
 
             // Dùng GridPane để bố trí layout
             GridPane grid = new GridPane();
@@ -275,6 +304,8 @@ public class CarActionHandler {
             grid.add(driveTrainField, 1, 13);
             grid.add(new Label("Trạng thái"), 0, 14);
             grid.add(carStatusField, 1, 14);
+            grid.add(new Label("Kho:"), 0, 15);
+            grid.add(inventoryField, 1, 15);
 
             dialog.getDialogPane().setContent(grid);
 
@@ -297,6 +328,7 @@ public class CarActionHandler {
                     selectedCar.setSlotDoor(Integer.parseInt(slotDoorField.getText()));
                     selectedCar.setDriveTrain(driveTrainField.getValue());
                     selectedCar.setCarStatus(carStatusField.getValue());
+                    selectedCar.setInventoryId(Integer.parseInt(inventoryField.getValue().split("-")[0].trim()));
                     return selectedCar;
                 }
                 return null;
@@ -325,9 +357,9 @@ public class CarActionHandler {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 int statusCode = carApi.deleteCar(selectedCar.getId());
-                if(statusCode == 200){
+                if (statusCode == 200) {
                     reloadData();
-                    alertNotice.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa thành công",null);
+                    alertNotice.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa thành công", null);
                 }
                 reloadData();
             }
@@ -352,13 +384,13 @@ public class CarActionHandler {
         updateTableCallback.accept(null); // Gọi callback để reload dữ liệu
     }
 
-    public void handleViewDetailCar(){
+    public void handleViewDetailCar() {
         CarDTO selectedCar = carTable.getSelectionModel().getSelectedItem();
         try {
             CarDTO carDTO = carApi.findCarById(selectedCar.getId());
             CarDetailView carDetailView = new CarDetailView();
             carDetailView.show(carDTO);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
