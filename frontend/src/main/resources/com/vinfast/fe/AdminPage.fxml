@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="215.0" styleClass="side-bar-left" stylesheets="@style/Dashboard.css" BorderPane.alignment="CENTER">
             <children>
@@ -229,9 +229,9 @@
                                                                 <Insets top="5.0" />
                                                             </VBox.margin>
                                                         </HBox>
-                                                        <Label prefHeight="61.0" prefWidth="159.0" text="Label">
+                                                        <Label fx:id="revenueID" prefHeight="45.0" prefWidth="175.0" text="Label" VBox.vgrow="ALWAYS">
                                                             <font>
-                                                                <Font name="System Bold" size="30.0" />
+                                                                <Font name="System Bold" size="20.0" />
                                                             </font>
                                                             <padding>
                                                                 <Insets left="10.0" />
@@ -268,7 +268,7 @@
                                                                 <Insets top="5.0" />
                                                             </VBox.margin>
                                                         </HBox>
-                                                        <Label prefHeight="61.0" prefWidth="159.0" text="Label">
+                                                        <Label prefHeight="61.0" prefWidth="159.0" text="Label" VBox.vgrow="ALWAYS">
                                                             <font>
                                                                 <Font name="System Bold" size="30.0" />
                                                             </font>
@@ -307,7 +307,7 @@
                                                                 <Insets top="5.0" />
                                                             </VBox.margin>
                                                         </HBox>
-                                                        <Label prefHeight="61.0" prefWidth="159.0" text="Label">
+                                                        <Label prefHeight="61.0" prefWidth="159.0" text="Label" VBox.vgrow="ALWAYS">
                                                             <font>
                                                                 <Font name="System Bold" size="30.0" />
                                                             </font>

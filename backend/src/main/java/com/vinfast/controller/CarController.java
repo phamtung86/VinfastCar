@@ -14,9 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-
+import java.util.Map;
 @RestController
 @RequestMapping("api/v1/cars")
 public class CarController {
@@ -99,4 +98,22 @@ public class CarController {
         Long total = carService.countTotalCars();
         return ResponseEntity.ok(total);
     }
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<?> updateCarStatus(@PathVariable Long id, @RequestBody Map<String, String> statusBody) {
+        String newStatus = statusBody.get("status");
+
+        if (newStatus == null || newStatus.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Trạng thái mới không được để trống"));
+        }
+
+        boolean updated = carService.updateCarStatus(id, newStatus);
+        if (updated) {
+            return ResponseEntity.ok(Map.of("message", "Cập nhật trạng thái xe thành công"));
+        } else {
+            return ResponseEntity.status(404).body(Map.of("message", "Không tìm thấy xe hoặc trạng thái không hợp lệ"));
+        }
+    }
+
+
+
 }

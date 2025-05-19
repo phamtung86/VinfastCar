@@ -35,6 +35,7 @@ public class CustomerApi {
 
     }
 
+
     public static CustomerDTO getCustomerById(Long id) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
