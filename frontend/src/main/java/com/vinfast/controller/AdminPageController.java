@@ -1,13 +1,10 @@
 package com.vinfast.controller;
 
-<<<<<<< HEAD
 import com.vinfast.api.CarApi;
 import com.vinfast.dto.CarDTO;
 import com.vinfast.ui.chart.CarPieChart;
-=======
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.dto.OrderChartDTO;
->>>>>>> 1a6a710 ([add] order)
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,13 +27,10 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-<<<<<<< HEAD
-=======
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
->>>>>>> 1a6a710 ([add] order)
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -45,14 +39,9 @@ public class AdminPageController implements Initializable {
     private HBox contentBox;
     @FXML
     private VBox mainContainer;
-<<<<<<< HEAD
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
-
-=======
-    private Node savedContentBox;
     @FXML
     private LineChart<String, Number> orderFlowchart;// Lưu contentBox gốc để khôi phục khi cần
->>>>>>> 1a6a710 ([add] order)
     private void loadPage(String fxmlFile) {
         try {
             if (savedContentBox == null) {
@@ -90,7 +79,6 @@ public class AdminPageController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         carApi = new CarApi();
         logChoice.setItems(list);
-<<<<<<< HEAD
         List<CarDTO> cars = carApi.getAllCars();
         CarPieChart pieChart = new CarPieChart(cars, "Phân phối xe theo trạng thái");
         pieChartContainer.getChildren().add(pieChart); // Line 73
@@ -98,9 +86,7 @@ public class AdminPageController implements Initializable {
             System.err.println("salesLineChartContainer is null!");
             return;
         }
-=======
         initOrderFlowChart();
->>>>>>> 1a6a710 ([add] order)
     }
 
     @FXML
@@ -110,9 +96,7 @@ public class AdminPageController implements Initializable {
             loadLoginPage();
         }
     }
-<<<<<<< HEAD
 
-=======
     @FXML
     public void initOrderFlowChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -145,7 +129,6 @@ public class AdminPageController implements Initializable {
             e.printStackTrace();
         }
     }
->>>>>>> 1a6a710 ([add] order)
     private void loadLoginPage() {
         try {
             // Load trang Login

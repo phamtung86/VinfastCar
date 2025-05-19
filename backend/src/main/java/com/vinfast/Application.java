@@ -15,12 +15,12 @@ public class Application {
 		System.setProperty("DB_USERNAME", DotEnvConfig.getDbUsername());
 		System.setProperty("DB_PASSWORD", DotEnvConfig.getDbPassword());
 		System.setProperty("SECRET", DotEnvConfig.getSecret());
-		Connection conn = DBConnection.getConnection();
-		if (conn != null) {
-			System.out.println(" Kết nối thành công!");
-		} else {
-			System.out.println(" Kết nối thất bại!");
-		}
+//		Connection conn = DBConnection.getConnection();
+//		if (conn != null) {
+//			System.out.println(" Kết nối thành công!");
+//		} else {
+//			System.out.println(" Kết nối thất bại!");
+//		}
 		SpringApplication.run(Application.class, args);
 	}
 

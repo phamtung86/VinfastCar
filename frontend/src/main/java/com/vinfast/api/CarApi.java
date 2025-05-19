@@ -38,10 +38,28 @@ public class CarApi {
         return mapper.readValue(response.body(), CarPageResponse.class);
     }
 
-//    public List<CarDTO> getAllCars() {
-//        try {
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars"))
+    public List<CarDTO> getAllCars() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/cars"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Kiểm tra mã trạng thái HTTP
+            if (response.statusCode() != 200) {
+                throw new IOException("Failed to fetch cars: " + response.statusCode() + " " + response.body());
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<CarDTO>>() {
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public List<CarDTO> getCarByStatus(String status)  {
         try {
