@@ -24,6 +24,12 @@ public class InventoryController {
     @Autowired
     private ModelMapper _modelMapper;
 
+    @GetMapping
+    public ResponseEntity<List<InventoryDTO>> getAllInventory() {
+        List<InventoryDTO> dtos = _inventoryService.getAllInventory();
+        return dtos != null ? ResponseEntity.ok(dtos) : ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/page")
     public ResponseEntity<Page<InventoryDTO>> getInventoriesByPage(Pageable pageable) {
         Page<Inventory> pageInventory = _inventoryService.getInventoriesByPage(pageable);
@@ -62,4 +68,6 @@ public class InventoryController {
         List<IInventoryTopModel> result = _inventoryService.getTopInventory();
         return ResponseEntity.status(200).body(result);
     }
+
+
 }
