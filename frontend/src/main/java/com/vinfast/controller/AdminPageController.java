@@ -1,27 +1,35 @@
 package com.vinfast.controller;
 
 import com.vinfast.api.CarApi;
+import com.vinfast.api.InventoryApi;
 import com.vinfast.dto.CarDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.dto.OrderChartDTO;
 import com.vinfast.ui.chart.CarBarChart;
+import com.vinfast.dto.InventoryDTO;
+import com.vinfast.dto.InventoryTopDTO;
+import com.vinfast.ui.chart.InventoryChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -71,6 +79,16 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private VBox salesLineChartContainer;
+
+    @FXML
+    private StackedBarChart<String, Number> inventoryChart;
+
+    @FXML
+    private CategoryAxis inventoryChartXAxis;
+
+    @FXML
+    private NumberAxis inventoryChartYAxis;
+
     @FXML
     private VBox pieChartContainer;
     @FXML
@@ -84,7 +102,7 @@ public class AdminPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        logChoice.setItems(list);
+        initInventoryChart();
         showCarBarChart();
         showCountAllCars();
     }
@@ -168,6 +186,47 @@ public class AdminPageController implements Initializable {
     }
 
 
+
+    public void initInventoryChart() {
+        // Gán nhãn cho trục
+        inventoryChartXAxis.setLabel("Tên kho");
+        inventoryChartYAxis.setLabel("Số xe");
+        inventoryChartYAxis.setTickLabelFill(Color.LIGHTSKYBLUE);
+
+        // Cấu hình biểu đồ
+        inventoryChart.setTitle("Số xe theo 5 kho chứa nhiều nhất");
+        inventoryChart.setLegendVisible(false);
+        inventoryChart.setAnimated(false);
+
+        // Xóa dữ liệu cũ
+        inventoryChart.getData().clear();
+
+        // Tạo series dữ liệu
+        XYChart.Series<String, Number> carCountSeries = new XYChart.Series<>();
+
+        try {
+            // Gọi API để lấy dữ liệu thật
+            InventoryApi inventoryApi = new InventoryApi();
+            List<InventoryTopDTO> topInventories = inventoryApi.getInventoryTop();
+
+            // Chuyển dữ liệu từ DTO sang series
+            for (InventoryTopDTO dto : topInventories) {
+                XYChart.Data<String, Number> data = new XYChart.Data<>(dto.getName(), dto.getCarCount());
+                carCountSeries.getData().add(data);
+            }
+
+            // Thêm series vào biểu đồ
+            inventoryChart.getData().add(carCountSeries);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Gợi ý: Hiển thị thông báo nếu API lỗi
+            // alertNotice.showError("Lỗi khi tải dữ liệu kho", e.getMessage());
+        }
+    }
+
+    private record Warehouse(String name, int capacity, int carCount) {}
+
+
     private void showAlert(String title, String message) {
         System.out.println(title + ": " + message);
     }
@@ -223,5 +282,6 @@ public class AdminPageController implements Initializable {
 
     public void moveToReport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Report.fxml");
+
     }
 }
