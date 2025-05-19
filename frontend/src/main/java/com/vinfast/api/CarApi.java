@@ -17,6 +17,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 public class CarApi {
 
@@ -239,4 +240,36 @@ public class CarApi {
         });
     }
 
+    public static boolean updateCarStatus(Long carId, String newStatus) {
+        // Đổi URL cho đúng với controller bạn đã viết: /update-status/{id}
+        String url = String.format("%s/api/v1/cars/update-status/%d", ApiConfig.BASE_URL, carId);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            // Gửi JSON với key "status" khớp controller
+            String jsonBody = mapper.writeValueAsString(Map.of("status", newStatus));
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Cập nhật trạng thái xe thành công.");
+                return true;
+            } else {
+                System.err.printf("Lỗi cập nhật trạng thái xe (%d): %s%n", response.statusCode(), response.body());
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Lỗi khi gọi API cập nhật trạng thái xe:");
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+
+        return false;
+    }
 }

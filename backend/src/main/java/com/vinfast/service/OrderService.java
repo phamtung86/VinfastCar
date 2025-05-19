@@ -99,5 +99,17 @@ public class OrderService implements IOrderService {
         return false;
     }
 
+    @Override
+    public Long getRevenue() {
+        Long revenue = 0L;
+        List<Order> orders = orderRepository.findAllOrdersWithDetails();
+        for (Order order : orders) {
+            if(order.getStatus().equals("Completed")){
+                revenue += order.getTotalAmount();
+            }
+        }
+        return revenue;
+    }
+
 
 }
