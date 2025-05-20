@@ -65,6 +65,10 @@ public class OrderController {
     public List<OrderChartDTO> getOrderChartData() {
         return orderService.getOrderCountByDate();
     }
+    @GetMapping("/Revenue")
+    public Long getRevenue(){
+        return orderService.getRevenue();
+    }
 
 }
 

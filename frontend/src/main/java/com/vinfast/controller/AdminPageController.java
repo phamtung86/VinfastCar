@@ -1,14 +1,19 @@
 package com.vinfast.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.api.CarApi;
 import com.vinfast.api.InventoryApi;
+
+import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vinfast.dto.InventoryDTO;
+import com.vinfast.dto.InventoryTopDTO;
 import com.vinfast.dto.OrderChartDTO;
 import com.vinfast.ui.chart.CarBarChart;
 import com.vinfast.dto.InventoryDTO;
 import com.vinfast.dto.InventoryTopDTO;
 import com.vinfast.ui.chart.InventoryChart;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,6 +49,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class AdminPageController implements Initializable {
+    private final OrderApi orderApi = new OrderApi();
+
     @FXML
     private HBox contentBox;
     @FXML
@@ -51,6 +58,9 @@ public class AdminPageController implements Initializable {
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
     @FXML
     private LineChart<String, Number> orderFlowchart;// Lưu contentBox gốc để khôi phục khi cần
+    @FXML
+    private Label revenueID;
+
     private void loadPage(String fxmlFile) {
         try {
             if (savedContentBox == null) {
@@ -74,8 +84,6 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private HBox chartContainer;
-//    @FXML
-//    private ChoiceBox<String> logChoice;
 
     @FXML
     private VBox salesLineChartContainer;
@@ -93,27 +101,61 @@ public class AdminPageController implements Initializable {
     private VBox pieChartContainer;
     @FXML
     private Label countAllCars;
+    @FXML
+    private HBox dashBoard;
+    @FXML
+    private HBox manageCar;
+    @FXML
+    private HBox manageClient;
+
+    @FXML
+    private HBox manageWarehouse;
+
+    @FXML
+    private HBox support;
+
+    @FXML
+    private HBox report;
+
+    @FXML
+    private Label totalInventories;
 
 
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
-    private CarApi carApi = new CarApi();
-    public List<CarDTO> cars = carApi.getAllCars();
-
+    private final CarApi carApi = new CarApi();
+    private final InventoryApi inventoryApi = new InventoryApi();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initInventoryChart();
         showCarBarChart();
         showCountAllCars();
+        List<CarDTO> cars = carApi.getAllCars();
+        List<InventoryDTO> inventoryDTOS = inventoryApi.getAllInventories();
+        showCarBarChart(cars);
+        showCountAllCars(cars);
+        showTotalInventories(inventoryDTOS);
+        loadRevenue();    }
+
+    private void loadRevenue() {
+        new Thread(() -> {
+            long revenue = orderApi.getRevenue();
+            String formatted = String.format("%,d VND", revenue); // Ví dụ: 123,456,789 VND
+            Platform.runLater(() -> revenueID.setText(formatted));
+        }).start();
     }
 
-    public void showCountAllCars() {
+    public void showCountAllCars(List<CarDTO> cars) {
         countAllCars.setText(String.valueOf(cars.size()));
     }
 
-    public void showCarBarChart (){
+    public void showTotalInventories(List<InventoryDTO> inventoryDTOS) {
+        totalInventories.setText(String.valueOf(inventoryDTOS.size()));
+    }
+
+    public void showCarBarChart(List<CarDTO> cars) {
         CarBarChart barChart = new CarBarChart(cars, "Phân phối xe theo trạng thái");
-        pieChartContainer.getChildren().add(barChart); // Line 73
+        pieChartContainer.getChildren().add(barChart);
         if (salesLineChartContainer == null) {
             System.err.println("salesLineChartContainer is null!");
             return;
@@ -121,13 +163,6 @@ public class AdminPageController implements Initializable {
         initOrderFlowChart();
     }
 
-    @FXML
-    private void handleChoiceBoxSelection(ActionEvent e) {
-//        String selectedBox = logChoice.getValue();
-//        if ("LogOut".equals(selectedBox)) {
-//            loadLoginPage();
-//        }
-    }
 
     @FXML
     public void initOrderFlowChart() {
@@ -161,6 +196,7 @@ public class AdminPageController implements Initializable {
             e.printStackTrace();
         }
     }
+
     private void loadLoginPage() {
         try {
             // Load trang Login
@@ -184,9 +220,6 @@ public class AdminPageController implements Initializable {
             showAlert("Lỗi", "Không thể tải lại trang đăng nhập!");
         }
     }
-
-
-
     public void initInventoryChart() {
         // Gán nhãn cho trục
         inventoryChartXAxis.setLabel("Tên kho");
@@ -227,6 +260,7 @@ public class AdminPageController implements Initializable {
     private record Warehouse(String name, int capacity, int carCount) {}
 
 
+
     private void showAlert(String title, String message) {
         System.out.println(title + ": " + message);
     }
@@ -240,48 +274,31 @@ public class AdminPageController implements Initializable {
             }
         }
     }
-    @FXML
-    private void onMouseEntered(MouseEvent event) {
-        Object source = event.getSource();
-        if (source instanceof HBox) {
-            HBox hbox = (HBox) source;
-            // đổi màu nền khi hover
-            hbox.setStyle("-fx-background-color: #ADD8E6;"); // màu xanh nhạt ví dụ
-//            hbox.setPadding(Insets.EMPTY(= new (10)));
-        }
-    }
-
-    @FXML
-    private void onMouseExited(MouseEvent event) {
-        Object source = event.getSource();
-        if (source instanceof HBox) {
-            HBox hbox = (HBox) source;
-            // reset màu nền về mặc định (hoặc style css cũ)
-            hbox.setStyle("");
-        }
-    }
 
     public void moveToManageCar(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/ManageCar.fxml");
+        manageCar.setStyle("-fx-background-color: #80cbfa;");
     }
 
     public void moveToManageClient(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/ManageClient.fxml");
+        manageClient.setStyle("-fx-background-color: #80cbfa;");
 
     }
 
     public void moveToWarehouse(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Warehouse.fxml");
-
+        manageWarehouse.setStyle("-fx-background-color: #80cbfa;");
     }
 
     public void moveToSupport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Support.fxml");
+        manageClient.setStyle("-fx-background-color: #80cbfa;");
 
     }
 
     public void moveToReport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Report.fxml");
-
+        manageClient.setStyle("-fx-background-color: #80cbfa;");
     }
 }

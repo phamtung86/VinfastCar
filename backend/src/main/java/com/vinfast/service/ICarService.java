@@ -27,6 +27,7 @@ public interface ICarService {
     boolean updateCar(CarDTO carDTO);
 
     Long countTotalCars();
+    public boolean updateCarStatus(Long id, String newStatus);
 
 
 }

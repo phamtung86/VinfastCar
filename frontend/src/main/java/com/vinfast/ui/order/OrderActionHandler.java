@@ -1,22 +1,21 @@
 package com.vinfast.ui.order;
 
 import com.vinfast.api.CarApi;
+import com.vinfast.api.CustomerApi;
 import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
-import com.vinfast.dto.LibraryDTO;
+import com.vinfast.dto.CustomerDTO;
 import com.vinfast.dto.OrderDTO;
 import com.vinfast.ui.alert.AlertNotice;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -26,173 +25,191 @@ public class OrderActionHandler {
     private AlertNotice alertNotice = new AlertNotice();
     private final OrderApi orderApi = new OrderApi();
     private final CarApi carApi = new CarApi();
+    private final List<String> paymethod = Arrays.asList("Bank", "Cash", "Installment");
+    private final List<String> listStatus = Arrays.asList("Pending", "Processing", "Completed");
+
+
+    public static List<CustomerDTO> getAllCus() throws IOException, InterruptedException {
+        List<CustomerDTO> list = CustomerApi.getAllCustomers();
+        return list;
+    }
+    public Map<String, CustomerDTO> getCustomerMap() throws IOException, InterruptedException {
+        Map<String, CustomerDTO> map = new HashMap<>();
+        List<CustomerDTO> customerDTOS = getAllCus();
+        for (CustomerDTO customer : customerDTOS) {
+            String display = customer.getId() + " " + customer.getName();
+            map.put(display, customer);
+        }
+        return map;
+    }
+
+
+
+
     private final List<CarDTO> carOption = carApi.getCarByStatus("AVAILABLE");
+
+    public Map<String, CarDTO> getCarMap() {
+        Map<String, CarDTO> carMap = new HashMap<>();
+        for (CarDTO car : carOption) {
+            String display = car.getId().toString() + " " + car.getName();
+            carMap.put(display, car);
+        }
+        return carMap;
+    }
+
+
 
     public OrderActionHandler(TableView<OrderDTO> orderTable, Consumer<List<OrderDTO>> updateTableCallback) {
         this.orderTable = orderTable;
         this.updateTableCallback = updateTableCallback;
     }
+    public void handleAddOrder() throws IOException, InterruptedException {
+        Dialog<OrderDTO> dialog = new Dialog<>();
+        dialog.setTitle("Thêm Đơn Hàng Mới");
+        dialog.setHeaderText("Nhập thông tin đơn hàng mới");
 
-    public void handleEditOrder() {
-        OrderDTO selectedOrder = orderTable.getSelectionModel().getSelectedItem();
-        if (selectedOrder != null) {
-            Dialog<OrderDTO> dialog = new Dialog<>();
-            dialog.setTitle("Sửa Thông Tin Hóa Đơn");
-            dialog.setHeaderText("Chỉnh sửa thông tin Hóa Đơn");
+        // Dữ liệu map
+        Map<String, CustomerDTO> cusMap = getCustomerMap();
+        Map<String, CarDTO> carMap = getCarMap();
 
-            ButtonType saveButtonType = new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+        // ComboBox
+        ComboBox<String> customerComboBox = new ComboBox<>(FXCollections.observableArrayList(cusMap.keySet()));
+        customerComboBox.setPromptText("Chọn khách hàng");
 
-            // Các trường nhập liệu
-            TextField idField = new TextField(String.valueOf(selectedOrder.getId()));
-            TextField nameCustomerField = new TextField(selectedOrder.getCustomerName());
-            TextField idCustomerField = new TextField(String.valueOf(selectedOrder.getCustomerId()));
-            TextField nameCarField = new TextField(selectedOrder.getCar().getName());
-            TextField totalAmountField = new TextField(String.valueOf(selectedOrder.getTotalAmount()));
+        ComboBox<String> carComboBox = new ComboBox<>(FXCollections.observableArrayList(carMap.keySet()));
+        carComboBox.setPromptText("Chọn xe");
 
-            // Chuyển Date -> LocalDate để hiển thị trong DatePicker
-            LocalDate localDate = selectedOrder.getOrderDate().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            DatePicker orderDatePicker = new DatePicker(localDate);
+        // TextFields
+        TextField totalAmountField = new TextField();
+        totalAmountField.setPromptText("Tổng tiền");
+        totalAmountField.setEditable(false); // Không cho người dùng chỉnh sửa tay
 
-            TextField statusField = new TextField(selectedOrder.getStatus());
+        ComboBox<String> paymentMethodCombobox = new ComboBox<>(FXCollections.observableArrayList(paymethod));
+        paymentMethodCombobox.setPromptText("Phương thức thanh toán");
 
-            // Giao diện nhập liệu
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
+        ComboBox<String> statusCombobox = new ComboBox<>(FXCollections.observableArrayList(listStatus));
+        statusCombobox.setPromptText("Trạng thái");
 
-            grid.add(new Label("ID hóa đơn:"), 0, 0);
-            grid.add(idField, 1, 0);
-            grid.add(new Label("Tên khách hàng:"), 0, 1);
-            grid.add(nameCustomerField, 1, 1);
-            grid.add(new Label("ID khách hàng:"), 0, 2);
-            grid.add(idCustomerField, 1, 2);
-            grid.add(new Label("Tên xe:"), 0, 3);
-            grid.add(nameCarField, 1, 3);
-            grid.add(new Label("Tổng tiền:"), 0, 4);
-            grid.add(totalAmountField, 1, 4);
-            grid.add(new Label("Ngày tạo:"), 0, 5);
-            grid.add(orderDatePicker, 1, 5);
-            grid.add(new Label("Trạng thái:"), 0, 6);
-            grid.add(statusField, 1, 6);
-
-            dialog.getDialogPane().setContent(grid);
-
-            // Xử lý lưu
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == saveButtonType) {
-                    selectedOrder.setId(Long.parseLong(idField.getText()));
-                    selectedOrder.setCustomerName(nameCustomerField.getText());
-                    selectedOrder.setCustomerId(Integer.parseInt(idCustomerField.getText()));
-                    selectedOrder.getCar().setName(nameCarField.getText());
-                    selectedOrder.setTotalAmount(Long.parseLong(totalAmountField.getText()));
-
-                    // Chuyển LocalDate -> Date
-                    LocalDate selectedLocalDate = orderDatePicker.getValue();
-                    Date date = Date.from(selectedLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    selectedOrder.setOrderDate(date);
-
-                    selectedOrder.setStatus(statusField.getText());
-                    return selectedOrder;
-                }
-                return null;
-            });
-
-            Optional<OrderDTO> result = dialog.showAndWait();
-            result.ifPresent(editedOrder -> {
-                // Gọi API lưu nếu cần
-                orderApi.editOrder(editedOrder);
-                orderTable.refresh();
-            });
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Chưa chọn hóa đơn");
-            alert.setHeaderText(null);
-            alert.setContentText("Vui lòng chọn một hóa đơn để sửa.");
-            alert.showAndWait();
-        }
-    }
-public void handleAddOrder() {
-    Dialog<OrderDTO> dialog = new Dialog<>();
-    dialog.setTitle("Thêm Đơn Hàng Mới");
-    dialog.setHeaderText("Nhập thông tin đơn hàng mới");
-
-    TextField customerNameField = new TextField();
-    customerNameField.setPromptText("Tên khách hàng");
-
-    TextField customerIdField = new TextField();
-    customerIdField.setPromptText("ID khách hàng");
-
-    ComboBox<CarDTO> carComboBox = new ComboBox<>(FXCollections.observableArrayList(carOption));
-    carComboBox.setPromptText("Chọn xe");
-
-    TextField totalAmountField = new TextField();
-    totalAmountField.setPromptText("Tổng tiền");
-
-    TextField paymentMethodField = new TextField();
-    paymentMethodField.setPromptText("Phương thức thanh toán");
-
-    TextField statusField = new TextField();
-    statusField.setPromptText("Trạng thái");
-
-    VBox vbox = new VBox(10, customerNameField, customerIdField, carComboBox, totalAmountField, paymentMethodField, statusField);
-    vbox.setPadding(new Insets(10));
-
-    dialog.getDialogPane().setContent(vbox);
-    ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
-    dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
-
-    dialog.setResultConverter(dialogButton -> {
-        if (dialogButton == addButtonType) {
-            try {
-                OrderDTO newOrder = new OrderDTO();
-                newOrder.setId(0L); // ID sẽ được tạo tự động từ server
-                newOrder.setCustomerName(customerNameField.getText());
-                newOrder.setCustomerId(Integer.parseInt(customerIdField.getText()));
-                newOrder.setCar(carComboBox.getValue());
-                newOrder.setTotalAmount(Long.parseLong(totalAmountField.getText()));
-                newOrder.setPaymentMethod(paymentMethodField.getText());
-                newOrder.setStatus(statusField.getText());
-                newOrder.setOrderDate(new Date()); // Ngày hiện tại
-                return newOrder;
-            } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Lỗi nhập liệu");
-                alert.setHeaderText("Vui lòng nhập đúng định dạng số trong các trường ID khách hàng và Tổng tiền.");
-                alert.showAndWait();
-                System.out.println(e);
+        // Khi chọn xe thì tự fill giá
+        carComboBox.setOnAction(event -> {
+            String selected = carComboBox.getValue();
+            if (selected != null && carMap.containsKey(selected)) {
+                CarDTO selectedCar = carMap.get(selected);
+                totalAmountField.setText(String.valueOf(selectedCar.getPrice()));
             }
-        }
-        return null;
-    });
+        });
 
-    Optional<OrderDTO> result = dialog.showAndWait();
-    result.ifPresent(order -> {
-        // Gọi hàm thêm đơn hàng
-        new Thread(() -> {
-            try {
-                orderApi.addOrder(order);
-                Platform.runLater(() -> {
-                    reloadData(); // Tải lại dữ liệu
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thành công");
-                    alert.setHeaderText("Thêm đơn hàng thành công");
-                    alert.showAndWait();
-                });
-            } catch (Exception ex) {
-                Platform.runLater(() -> {
+// Giao diện GridPane đẹp hơn
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        // Thiết lập độ rộng cột
+        ColumnConstraints col1 = new ColumnConstraints(120); // cột nhãn
+        ColumnConstraints col2 = new ColumnConstraints(220); // cột input
+        grid.getColumnConstraints().addAll(col1, col2);
+
+        // Đặt độ rộng cố định cho các ComboBox và TextField
+        customerComboBox.setPrefWidth(220);
+        carComboBox.setPrefWidth(220);
+        paymentMethodCombobox.setPrefWidth(220);
+        statusCombobox.setPrefWidth(220);
+        totalAmountField.setPrefWidth(220);
+
+        // Thêm margin để đẹp hơn
+        GridPane.setMargin(customerComboBox, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(carComboBox, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(paymentMethodCombobox, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(statusCombobox, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(totalAmountField, new Insets(0, 0, 10, 0));
+
+        grid.add(new Label("Khách hàng:"), 0, 0);
+        grid.add(customerComboBox, 1, 0);
+        grid.add(new Label("Xe:"), 0, 1);
+        grid.add(carComboBox, 1, 1);
+        grid.add(new Label("Tổng tiền:"), 0, 2);
+        grid.add(totalAmountField, 1, 2);
+        grid.add(new Label("Phương thức thanh toán:"), 0, 3);
+        grid.add(paymentMethodCombobox, 1, 3);
+        grid.add(new Label("Trạng thái:"), 0, 4);
+        grid.add(statusCombobox, 1, 4);
+        dialog.getDialogPane().setContent(grid);
+        ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+        // Xử lý kết quả
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                try {
+                    if (customerComboBox.getValue() == null || carComboBox.getValue() == null ||
+                            paymentMethodCombobox.getValue().isEmpty() || statusCombobox.getValue().isEmpty()) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Thiếu thông tin");
+                        alert.setHeaderText("Vui lòng nhập đầy đủ thông tin!");
+                        alert.showAndWait();
+                        return null;
+                    }
+
+                    OrderDTO newOrder = new OrderDTO();
+                    newOrder.setId(0L); // ID server tự tạo
+
+                    String selectedCustomerStr = customerComboBox.getValue();
+                    CustomerDTO selectedCustomer = cusMap.get(selectedCustomerStr);
+                    newOrder.setCustomerId(Math.toIntExact(selectedCustomer.getId()));
+                    newOrder.setCustomerName(selectedCustomer.getName());
+
+                    String selectedCarStr = carComboBox.getValue();
+                    CarDTO selectedCar = carMap.get(selectedCarStr);
+                    newOrder.setCar(selectedCar);
+
+                    newOrder.setTotalAmount(Long.parseLong(totalAmountField.getText()));
+                    newOrder.setPaymentMethod(paymentMethodCombobox.getValue());
+                    newOrder.setStatus(statusCombobox.getValue());
+                    newOrder.setOrderDate(new Date());
+
+                    return newOrder;
+                } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Lỗi");
-                    alert.setHeaderText("Có lỗi xảy ra khi thêm đơn hàng");
+                    alert.setHeaderText("Vui lòng kiểm tra lại dữ liệu nhập.");
+                    alert.setContentText(e.getMessage());
                     alert.showAndWait();
-                });
+                    return null;
+                }
             }
-        }).start();
-    });
-}
+            return null;
+        });
+        Optional<OrderDTO> result = dialog.showAndWait();
+        result.ifPresent(order -> {
+            new Thread(() -> {
+                try {
+                    orderApi.addOrder(order);
+
+                    // (Tùy chọn) Cập nhật trạng thái xe thành SOLD
+                    CarDTO carToUpdate = order.getCar();
+                    carToUpdate.setStatus("RESERVED");
+                    CarApi.updateCarStatus(Long.valueOf(carToUpdate.getId()),"RESERVED");
+
+                    Platform.runLater(() -> {
+                        reloadData();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Thành công");
+                        alert.setHeaderText("Thêm đơn hàng thành công");
+                        alert.showAndWait();
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Lỗi");
+                        alert.setHeaderText("Có lỗi xảy ra khi thêm đơn hàng");
+                        alert.setContentText(ex.getMessage());
+                        alert.showAndWait();
+                    });
+                }
+            }).start();
+        });
+    }
     private void reloadData() {
         updateTableCallback.accept(null); // Gọi callback để reload dữ liệu
     }

@@ -47,8 +47,13 @@ public class LoginController {
             Image icon = new Image(getClass().getResourceAsStream("/com/vinfast/fe/image/icon.png"));
             stage.getIcons().add(icon);
             stage.show();
-            stage.setMaximized(true);
-            stage.setResizable(false);
+            boolean isMaximized = stage.isMaximized();
+            if(isMaximized) {
+                stage.setResizable(false);
+            }
+            else stage.setResizable(true);
+//            stage.setMaximized(true);
+//            stage.setResizable(false);
             stage.centerOnScreen();
             Stage loginStage =(Stage) loginButton.getScene().getWindow();
             loginStage.close();
