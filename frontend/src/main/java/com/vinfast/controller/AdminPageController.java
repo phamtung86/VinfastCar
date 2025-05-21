@@ -2,12 +2,10 @@ package com.vinfast.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.api.CarApi;
+import com.vinfast.api.CustomerApi;
 import com.vinfast.api.InventoryApi;
 import com.vinfast.api.OrderApi;
-import com.vinfast.dto.CarDTO;
-import com.vinfast.dto.InventoryDTO;
-import com.vinfast.dto.InventoryTopDTO;
-import com.vinfast.dto.OrderChartDTO;
+import com.vinfast.dto.*;
 import com.vinfast.ui.chart.CarBarChart;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -35,20 +33,30 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AdminPageController implements Initializable {
     private final OrderApi orderApi = new OrderApi();
 
     @FXML
     private HBox contentBox;
+
     @FXML
     private VBox mainContainer;
+
     private Node savedContentBox; // Lưu contentBox gốc để khôi phục khi cần
+
     @FXML
     private LineChart<String, Number> orderFlowchart;// Lưu contentBox gốc để khôi phục khi cần
+
+    @FXML
+    private LineChart<String, Number> orderToMonthlyFlowchart;
+
+    @FXML
+    private StackedBarChart<String, Number> customerWithOrderToMonthlyFlowchart;
+
     @FXML
     private Label revenueID;
 
@@ -90,12 +98,16 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private VBox pieChartContainer;
+
     @FXML
     private Label countAllCars;
+
     @FXML
     private HBox dashBoard;
+
     @FXML
     private HBox manageCar;
+
     @FXML
     private HBox manageClient;
 
@@ -111,6 +123,8 @@ public class AdminPageController implements Initializable {
     @FXML
     private Label totalInventories;
 
+    @FXML
+    private Label countAllCustomers;
 
     ObservableList<String> list = FXCollections.observableArrayList("LogOut");
     private final CarApi carApi = new CarApi();
@@ -124,6 +138,9 @@ public class AdminPageController implements Initializable {
         showCarBarChart(cars);
         showCountAllCars(cars);
         showTotalInventories(inventoryDTOS);
+        showCountAllCustomers();
+        orderFluctuationToMonthly();
+        monthlyCustomerOrderTrends();
         loadRevenue();
     }
 
@@ -143,6 +160,17 @@ public class AdminPageController implements Initializable {
         totalInventories.setText(String.valueOf(inventoryDTOS.size()));
     }
 
+    public void showCountAllCustomers() {
+        try {
+            List<CustomerDTO> customers = CustomerApi.getAllCustomers();
+            int totalCustomers = customers.size();
+            countAllCustomers.setText(String.valueOf(totalCustomers));
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Lỗi khi lấy tổng số khách hàng: " + e.getMessage());
+            countAllCustomers.setText("N/A"); // Hiển thị giá trị mặc định nếu lỗi
+        }
+    }
+
     public void showCarBarChart(List<CarDTO> cars) {
         CarBarChart barChart = new CarBarChart(cars, "Phân phối xe theo trạng thái");
         pieChartContainer.getChildren().add(barChart);
@@ -153,6 +181,116 @@ public class AdminPageController implements Initializable {
         initOrderFlowChart();
     }
 
+    public void orderFluctuationToMonthly() { //Biến động đơn hàng theo tháng
+        try {
+            // Lấy dữ liệu đơn hàng theo tháng
+            Map<String, Long> ordersByMonth = getOrdersByMonth();
+
+            // Cấu hình và hiển thị biểu đồ
+            monthlyOrderFlowChart(ordersByMonth);
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Lỗi khi lấy dữ liệu đơn hàng: " + e.getMessage());
+        }
+    }
+
+    public void monthlyCustomerOrderTrends() {
+        try {
+            // Lấy dữ liệu khách hàng đặt hàng theo tháng
+            Map<String, Long> customersByMonth = getCustomersWithOrdersByMonth();
+            // Cấu hình và hiển thị biểu đồ
+            monthlyCustomerFlowChart(customersByMonth);
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Lỗi khi lấy dữ liệu khách hàng đặt hàng: " + e.getMessage());
+        }
+    }
+
+    private Map<String, Long> getOrdersByMonth() throws IOException, InterruptedException {
+        // Lấy danh sách khách hàng
+        List<CustomerDTO> customers = CustomerApi.getAllCustomers();
+
+        // Thu thập tất cả đơn hàng và nhóm theo tháng
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM-yyyy");
+        return customers.stream()
+                .flatMap(customer -> customer.getOrders().stream()) // Lấy tất cả đơn hàng
+                .collect(Collectors.groupingBy(
+                        order -> monthFormat.format(order.getOrderDate()), // Nhóm theo năm-tháng
+                        Collectors.counting() // Đếm số đơn hàng
+                ));
+    }
+
+    private void monthlyOrderFlowChart(Map<String, Long> ordersByMonth) {
+        // Tạo dữ liệu cho biểu đồ
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Số lượng đơn hàng");
+
+        // Sắp xếp các tháng và thêm dữ liệu vào series
+        ordersByMonth.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey()) // Sắp xếp theo tháng
+                .forEach(entry -> series.getData().add(
+                        new XYChart.Data<>(entry.getKey(), entry.getValue())
+                ));
+
+        // Cấu hình trục của biểu đồ
+        orderToMonthlyFlowchart.setTitle("Biến động số lượng đơn hàng theo tháng");
+        CategoryAxis xAxis = (CategoryAxis) orderToMonthlyFlowchart.getXAxis();
+        xAxis.setLabel("Tháng");
+        NumberAxis yAxis = (NumberAxis) orderToMonthlyFlowchart.getYAxis();
+        yAxis.setLabel("Số lượng đơn hàng");
+
+        // Xóa dữ liệu cũ và thêm dữ liệu mới
+        orderToMonthlyFlowchart.getData().clear();
+        orderToMonthlyFlowchart.getData().add(series);
+    }
+
+    private Map<String, Long> getCustomersWithOrdersByMonth() throws IOException, InterruptedException {
+        // Lấy danh sách khách hàng
+        List<CustomerDTO> customers = CustomerApi.getAllCustomers();
+
+        // Thu thập tất cả đơn hàng và nhóm theo tháng, đếm số lượng khách hàng duy nhất
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM-yyyy");
+        Map<String, Set<Long>> customersByMonth = customers.stream()
+                .filter(customer -> !customer.getOrders().isEmpty()) // Chỉ lấy khách hàng có đơn hàng
+                .flatMap(customer -> customer.getOrders().stream()
+                        .map(order -> new Object() {
+                            String month = monthFormat.format(order.getOrderDate());
+                            Long customerId = customer.getId();
+                        }))
+                .collect(Collectors.groupingBy(
+                        obj -> obj.month,
+                        Collectors.mapping(obj -> obj.customerId, Collectors.toSet())
+                ));
+
+        // Chuyển Set<Long> thành số lượng khách hàng
+        return customersByMonth.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> (long) entry.getValue().size()
+                ));
+    }
+
+    private void monthlyCustomerFlowChart(Map<String, Long> customersByMonth) {
+        // Tạo dữ liệu cho biểu đồ
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Số lượng khách hàng đặt hàng");
+
+        // Sắp xếp các tháng và thêm dữ liệu vào series
+        customersByMonth.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey()) // Sắp xếp theo tháng
+                .forEach(entry -> series.getData().add(
+                        new XYChart.Data<>(entry.getKey(), entry.getValue())
+                ));
+
+        // Cấu hình trục của biểu đồ
+        customerWithOrderToMonthlyFlowchart.setTitle("Biến động số lượng khách hàng đặt hàng theo tháng");
+        CategoryAxis xAxis = (CategoryAxis) customerWithOrderToMonthlyFlowchart.getXAxis();
+        xAxis.setLabel("Tháng");
+        NumberAxis yAxis = (NumberAxis) customerWithOrderToMonthlyFlowchart.getYAxis();
+        yAxis.setLabel("Số lượng khách hàng");
+
+        // Xóa dữ liệu cũ và thêm dữ liệu mới
+        customerWithOrderToMonthlyFlowchart.getData().clear();
+        customerWithOrderToMonthlyFlowchart.getData().add(series);
+    }
 
     @FXML
     public void initOrderFlowChart() {
@@ -211,7 +349,6 @@ public class AdminPageController implements Initializable {
         }
     }
 
-
     public void initInventoryChart() {
         // Gán nhãn cho trục
         inventoryChartXAxis.setLabel("Tên kho");
@@ -251,7 +388,6 @@ public class AdminPageController implements Initializable {
 
     private record Warehouse(String name, int capacity, int carCount) {
     }
-
 
     private void showAlert(String title, String message) {
         System.out.println(title + ": " + message);

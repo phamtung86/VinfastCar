@@ -99,7 +99,7 @@
 
             <HBox alignment="CENTER" spacing="10">
                 <padding>
-                    <Insets top="5" bottom="5"/>
+                    <Insets top="5" bottom="7"/>
                 </padding>
 
                 <Button fx:id="btnPrev" onAction="#previousPage" text="← Trước" />
