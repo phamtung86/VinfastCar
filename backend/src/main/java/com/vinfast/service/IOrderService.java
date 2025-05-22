@@ -1,6 +1,7 @@
 package com.vinfast.service;
 
 import com.vinfast.dto.CarDTO;
+import com.vinfast.dto.OrderChartDTO;
 import com.vinfast.dto.OrderDTO;
 import com.vinfast.entity.Car;
 import com.vinfast.entity.Order;
@@ -23,4 +24,5 @@ public interface IOrderService {
 
     boolean updateOrder(OrderDTO orderDTO);
     Long getRevenue();
+    List<OrderChartDTO> getOrderbyStatus();
 }
