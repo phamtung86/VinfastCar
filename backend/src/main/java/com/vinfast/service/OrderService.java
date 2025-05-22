@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService {
@@ -59,7 +60,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public Page<Order> getOrderByPage(Pageable pageable) {
-        return orderRepository.findAll(pageable);
+        return orderRepository.findAllDistinct(pageable);
     }
 
     @Transactional
@@ -75,7 +76,7 @@ public class OrderService implements IOrderService {
         }
     }
     public List<OrderChartDTO> getOrderCountByDate() {
-        List<Object[]> rawData = orderRepository.getOrderCountByDate();
+        List<Object[]> rawData = orderRepository.getOrderCountByDateInCurrentMonth();
         List<OrderChartDTO> result = new ArrayList<>();
 
         for (Object[] row : rawData) {
@@ -109,6 +110,14 @@ public class OrderService implements IOrderService {
             }
         }
         return revenue;
+    }
+
+    @Override
+    public List<OrderChartDTO> getOrderbyStatus() {
+        List<Object[]> results = orderRepository.countOrdersByStatus();
+        return results.stream()
+                .map(obj -> new OrderChartDTO((String) obj[0], (Long) obj[1]))
+                .collect(Collectors.toList());
     }
 
 
