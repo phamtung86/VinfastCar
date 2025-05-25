@@ -69,5 +69,11 @@ public class InventoryController {
         return ResponseEntity.status(200).body(result);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> findByNameIgnoreCase(@RequestParam(name = "name") String name){
+        List<InventoryDTO> inventoryDTOS = _inventoryService.findInventoryIgnoreCase(name);
+        return ResponseEntity.status(200).body(inventoryDTOS);
+
+    }
 
 }

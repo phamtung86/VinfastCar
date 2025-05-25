@@ -19,4 +19,6 @@ public interface IInventoryService {
     List<InventoryDTO> getAllInventory();
 
     Inventory getInventoryByID(Long id);
+
+    List<InventoryDTO> findInventoryIgnoreCase(String name);
 }

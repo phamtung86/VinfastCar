@@ -44,6 +44,9 @@ public class WarehouseController implements Initializable {
     private Pane boxFeatureSearch;
 
     @FXML
+    private Button btnSearch;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -74,6 +77,8 @@ public class WarehouseController implements Initializable {
         tableConfigurer.configureStyle();
         tableConfigurer.setDataIntoTableView();
         loadDataFromApi();
+
+        btnSearch.setOnAction(event -> searchInventoryByName());
     }
 
     private void loadDataFromApi() {
@@ -141,6 +146,26 @@ public class WarehouseController implements Initializable {
         inventoryActionHandler.handleDeleteInventory();
     }
 
+    @FXML
+    private void handleRefreshInventory() {
+        new Thread(() -> {
+            try {
+                InventoryPageResponse response = inventoryApi.getInventoryByPages(currentPage, pageSize, "id,desc");
+                totalInventory = response.getTotalElements();
+                isLastPage = response.isLast();
+                isFirstPage = response.isFirst();
+                Platform.runLater(() -> {
+                    inventoryTable.setItems(FXCollections.observableArrayList(response.getContent()));
+                    updatePaginationControls();
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showAlert("Lỗi", "Không thể tải dữ liệu từ API."));
+            }
+        }).start();
+    }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -148,5 +173,33 @@ public class WarehouseController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void searchInventoryByName() {
+        String keyword = searchField.getText().trim();
+        if (keyword.isEmpty()) {
+            showAlert("Thông báo", "Vui lòng nhập từ khóa để tìm kiếm.");
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                // Gọi API tìm kiếm theo tên (để trống phần gọi API theo yêu cầu)
+                List<InventoryDTO> searchResults = inventoryApi.searchInventoryByName(keyword);
+
+                Platform.runLater(() -> {
+                    if (searchResults != null && !searchResults.isEmpty()) {
+                        inventoryTable.setItems(FXCollections.observableArrayList(searchResults));
+                    } else {
+                        inventoryTable.setItems(FXCollections.observableArrayList());
+                        showAlert("Kết quả", "Không tìm thấy kết quả phù hợp.");
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showAlert("Lỗi", "Không thể thực hiện tìm kiếm."));
+            }
+        }).start();
     }
 }

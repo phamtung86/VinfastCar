@@ -73,6 +73,14 @@ public class InventoryService implements IInventoryService {
         return _inventoryRepository.findById(id).get();
     }
 
+    @Override
+    public List<InventoryDTO> findInventoryIgnoreCase(String name) {
+        List<Inventory> inventories = _inventoryRepository.findByNameContainingIgnoreCase(name);
+        List<InventoryDTO> inventoryDTOS = _modelMapper.map(inventories, new TypeToken<List<InventoryDTO>>(){}.getType());
+
+        return inventoryDTOS;
+    }
+
     /*
     @Override
     public List<InventoryTopModel> getTopInventory() {
