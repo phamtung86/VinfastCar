@@ -458,29 +458,21 @@ public class AdminPageController implements Initializable {
 
     public void moveToManageCar(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/ManageCar.fxml");
-        manageCar.setStyle("-fx-background-color: #80cbfa;");
     }
 
     public void moveToManageClient(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/ManageClient.fxml");
-        manageClient.setStyle("-fx-background-color: #80cbfa;");
-
     }
 
     public void moveToWarehouse(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Warehouse.fxml");
-        manageWarehouse.setStyle("-fx-background-color: #80cbfa;");
     }
 
     public void moveToSupport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Support.fxml");
-        manageClient.setStyle("-fx-background-color: #80cbfa;");
-
     }
 
     public void moveToReport(MouseEvent mouseEvent) {
         loadPage("/com/vinfast/fe/Report.fxml");
-        manageClient.setStyle("-fx-background-color: #80cbfa;");
-
     }
 }

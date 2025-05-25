@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="215.0" styleClass="side-bar-left" stylesheets="@style/Dashboard.css" BorderPane.alignment="CENTER">
             <children>
@@ -108,14 +108,6 @@
                     </padding>
                 </HBox>
                 <HBox fx:id="report" alignment="CENTER" onMouseClicked="#moveToReport" prefHeight="28.0" prefWidth="100.0" spacing="20.0" styleClass="side-bar-left-item">
-                    <children>
-                        <ImageView fitHeight="28.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@image/data-analysis.png" />
-                            </image>
-                        </ImageView>
-                        <Label prefHeight="27.0" prefWidth="124.0" styleClass="lableItems" stylesheets="@style/Dashboard.css" text="Thống Kê" textAlignment="CENTER" />
-                    </children>
                     <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                     </VBox.margin>
@@ -334,7 +326,7 @@
                                         <!--                                        Biểu đồ car start-->
                                         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="150.0" prefHeight="27.0" prefWidth="779.0">
                                             <children>
-                                                <Label text="FlowChart">
+                                                <Label>
                                                     <HBox.margin>
                                                         <Insets left="20.0" />
                                                     </HBox.margin>
@@ -385,7 +377,7 @@
 
                                         <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="779.0">
                                             <children>
-                                                <Label text="Charts">
+                                                <Label>
                                                     <HBox.margin>
                                                         <Insets left="20.0" />
                                                     </HBox.margin>
@@ -420,7 +412,7 @@
 
                                         <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="319.0" prefHeight="27.0" prefWidth="779.0">
                                             <children>
-                                                <Label text="FlowChart">
+                                                <Label>
                                                     <HBox.margin>
                                                         <Insets left="20.0" />
                                                     </HBox.margin>
@@ -448,7 +440,7 @@
                                                         </StackedBarChart>
                                                         <StackedBarChart fx:id="statusOrder" prefHeight="158.0" prefWidth="350.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
                                                             <xAxis>
-                                                                <CategoryAxis fx:id="xAxisOrder" side="BOTTOM" />
+                                                                <CategoryAxis side="BOTTOM" fx:id="xAxisOrder" />
                                                             </xAxis>
                                                             <yAxis>
                                                                 <NumberAxis fx:id="yAxisOrder" side="LEFT" />
