@@ -11,6 +11,7 @@ public interface ICustomerService {
     List<CustomerDTO> getAllCustomers();
 
     Customer findCustomerById(Long customerId);
+
     CustomerDTO getCustomerById(Long id);
 
     CustomerDTO addCustomer(CustomerDTO customer);
@@ -18,12 +19,6 @@ public interface ICustomerService {
     CustomerDTO updateCustomer(Long id, CustomerDTO customer);
 
     boolean deleteCustomer(Long id);
-
-    CustomerDTO addOrderToCustomer(Long id, OrderDTO order);
-
-    CustomerDTO updateOrderStatus(Long customerId, Long orderId, String newStatus);
-
-    CustomerDTO deleteOrder(Long customerId, Long orderId);
 
     Page<CustomerDTO> getAllCustomersToPage(Pageable pageable);
 

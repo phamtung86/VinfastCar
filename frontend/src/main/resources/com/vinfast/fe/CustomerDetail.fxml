@@ -65,38 +65,8 @@
                 <padding>
                     <Insets top="10" bottom="5" left="10" />
                 </padding>
-                <children>
-                    <Button fx:id="btnAddOrder" text="Thêm" textFill="#fcfcfc" styleClass="btn-add" onAction="#handleAddOrder">
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="37.0" preserveRatio="true">
-                                <image>
-                                    <Image url="@icon/add-button.png" />
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-
-                    <Button fx:id="btnEditOrder" text="Sửa" styleClass="btn-modify" onAction="#handleUpdateOrder">
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="25.0" preserveRatio="true">
-                                <image>
-                                    <Image url="@icon/edit-button.png" />
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-
-                    <Button fx:id="btnDeleteOrder" text="Xóa" textFill="#f5f2f2" styleClass="btn-delete" onAction="#handleDeleteOrder">
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="24.0" preserveRatio="true">
-                                <image>
-                                    <Image url="@icon/bin.png" />
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-
-                </children>
+<!--                <children>-->
+<!--                </children>-->
             </HBox>
         </children></AnchorPane>
 </AnchorPane>

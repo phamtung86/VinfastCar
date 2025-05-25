@@ -76,7 +76,6 @@ public class CustomerService implements ICustomerService{
                 Order order = new Order();
                 order.setOrderDate(new Date());
                 order.setPaymentMethod(orderDTO.getPaymentMethod());
-//                order.setTotalAmount(orderDTO.getTotalAmount());
                 order.setStatus(orderDTO.getStatus());
                 order.setCustomer(customer); // Gán ngược lại khách hàng
 
@@ -118,69 +117,6 @@ public class CustomerService implements ICustomerService{
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
         customerRepository.delete(customer);
         return true;
-    }
-
-    @Override
-    public CustomerDTO addOrderToCustomer(Long id, OrderDTO orderDTO) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID: " + id));
-
-        Order order = new Order();
-        order.setOrderDate(new Date());
-        order.setPaymentMethod(orderDTO.getPaymentMethod());
-        order.setStatus(orderDTO.getStatus());
-        order.setCustomer(customer);
-
-        if (orderDTO.getCar() != null) {
-            Integer carId = orderDTO.getCar().getId();
-            Car car = carRepository.findById(carId)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy xe với ID: " + carId));
-            order.setCar(car);
-            order.setTotalAmount(car.getPrice());
-        }
-
-        customer.getOrders().add(order);
-
-        Customer savedCustomer = customerRepository.save(customer);
-        return convertDTO.convertToCustomerDTO(savedCustomer);
-    }
-
-    @Override
-    public  CustomerDTO updateOrderStatus(Long customerId, Long orderId, String newStatus) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID: " + customerId));
-
-        Optional<Order> optionalOrder = customer.getOrders()
-                .stream()
-                .filter(order -> order.getId().equals(orderId))
-                .findFirst();
-
-        if (optionalOrder.isEmpty()) {
-            throw new RuntimeException("Không tìm thấy đơn hàng của khách hàng");
-        }
-
-        Order order = optionalOrder.get();
-        order.setStatus(newStatus);
-
-        Customer savedCustomer = customerRepository.save(customer);
-        return convertDTO.convertToCustomerDTO(savedCustomer);
-    }
-
-    @Override
-    public CustomerDTO deleteOrder(Long customerId, Long orderId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng với ID: " + customerId));
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId));
-
-        if (!order.getCustomer().getId().equals(customerId)) {
-            throw new RuntimeException("Đơn hàng không thuộc về khách hàng này");
-        }
-
-        orderRepository.delete(order);
-
-        return convertDTO.convertToCustomerDTO(customer);
     }
 
     public boolean emailExists(String email) {

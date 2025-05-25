@@ -147,22 +147,26 @@ public class ManageClientController implements Initializable {
     @FXML
     private void handleSearch() {
         String searchTerm = ((TextField) boxFeatureSearch.getChildren().get(0)).getText();
-        CustomerActionHandler.searchCustomers(searchTerm, customerTable);
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            page = 0;
+            loadAPI();
+        } else {
+            // Nếu API không hỗ trợ tìm kiếm có phân trang → fallback
+            List<CustomerDTO> results = CustomerApi.searchCustomers(searchTerm);
+            customerTable.setItems(FXCollections.observableArrayList(results));
+            lblPage.setText("Kết quả tìm kiếm");
+        }
     }
 
     @FXML
     private void handleAdd() {
         CustomerDTO newCustomer = CustomerActionHandler.addCustomer();
-
         if (newCustomer != null) {
             try {
                 CustomerApi.addCustomer(newCustomer);
-
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Thêm khách hàng thành công!");
                 alert.showAndWait();
-
-                customerTable.getItems().clear();
-                CustomerActionHandler.loadAllCustomers(customerTable);
+                loadAPI(); // chỉ gọi lại API thay vì loadAllCustomers
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi khi thêm khách hàng: " + e.getMessage());
                 alert.showAndWait();
@@ -173,7 +177,6 @@ public class ManageClientController implements Initializable {
     @FXML
     private void handleUpdate() {
         CustomerDTO selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
-
         if (selectedCustomer == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn khách hàng cần cập nhật!");
             alert.showAndWait();
@@ -181,23 +184,22 @@ public class ManageClientController implements Initializable {
         }
 
         boolean isUpdated = CustomerActionHandler.updateCustomer(selectedCustomer.getId());
-
         if (isUpdated) {
-            customerTable.getItems().clear();
-            CustomerActionHandler.loadAllCustomers(customerTable);
+            loadAPI(); // reload theo phân trang
         }
     }
 
     @FXML
     private void handleDelete() {
         CustomerActionHandler.deleteCustomer(customerTable);
+        loadAPI();
     }
 
     @FXML
     private void handleRefresh() {
         ((TextField) boxFeatureSearch.getChildren().get(0)).clear();
-        customerTable.getItems().clear();
-        CustomerActionHandler.loadAllCustomers(customerTable);
+        page = 0; // reset về trang đầu
+        loadAPI(); // dùng API phân trang
     }
 
     private void showCustomerDetail() {
