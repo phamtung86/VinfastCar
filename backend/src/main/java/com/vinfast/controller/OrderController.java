@@ -69,6 +69,10 @@ public class OrderController {
     public Long getRevenue(){
         return orderService.getRevenue();
     }
+    @GetMapping("/status-count")
+    public ResponseEntity<List<OrderChartDTO>> getOrderCountByStatus() {
+        return ResponseEntity.ok(orderService.getOrderbyStatus());
+    }
 
 }
 

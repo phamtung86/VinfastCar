@@ -1,5 +1,6 @@
 package com.vinfast.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinfast.api.CarApi;
 import com.vinfast.api.CustomerApi;
@@ -59,6 +60,15 @@ public class AdminPageController implements Initializable {
 
     @FXML
     private Label revenueID;
+    @FXML
+    private StackedBarChart<String, Number> statusOrder;
+
+    @FXML
+    private CategoryAxis xAxisOrder;
+
+    @FXML
+    private NumberAxis yAxisOrder;
+
 
     private void loadPage(String fxmlFile) {
         try {
@@ -141,7 +151,9 @@ public class AdminPageController implements Initializable {
         showCountAllCustomers();
         orderFluctuationToMonthly();
         monthlyCustomerOrderTrends();
+        initOrderFlowChart();
         loadRevenue();
+        loadOrderStatusChart();
     }
 
     private void loadRevenue() {
@@ -178,7 +190,6 @@ public class AdminPageController implements Initializable {
             System.err.println("salesLineChartContainer is null!");
             return;
         }
-        initOrderFlowChart();
     }
 
     public void orderFluctuationToMonthly() { //Biến động đơn hàng theo tháng
@@ -295,7 +306,7 @@ public class AdminPageController implements Initializable {
     @FXML
     public void initOrderFlowChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Số đơn hàng theo ngày");
+        series.setName("Số đơn hàng theo ngày trong tháng");
 
         try {
             // Gọi API
@@ -323,6 +334,48 @@ public class AdminPageController implements Initializable {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public void loadOrderStatusChart() {
+        // URL API của bạn
+        String apiUrl = "http://localhost:8080/api/v1/orders/status-count";
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(json -> {
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        List<OrderChartDTO> data = mapper.readValue(json, new TypeReference<>() {});
+
+                        // JavaFX UI updates must run on JavaFX thread
+                        Platform.runLater(() -> {
+                            statusOrder.getData().clear();
+                            xAxisOrder.setLabel("Trạng thái đơn hàng");
+                            yAxisOrder.setLabel("Số lượng");
+
+                            XYChart.Series<String, Number> series = new XYChart.Series<>();
+                            series.setName("Trạng thái");
+
+                            for (OrderChartDTO dto : data) {
+                                series.getData().add(new XYChart.Data<>(dto.getDate(), dto.getCount()));
+                            }
+
+                            statusOrder.getData().add(series);
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
     }
 
     private void loadLoginPage() {

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vinfast.controller.AdminPageController">
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="215.0" styleClass="side-bar-left" stylesheets="@style/Dashboard.css" BorderPane.alignment="CENTER">
             <children>
@@ -368,14 +368,14 @@
                                                                 <NumberAxis side="LEFT" />
                                                             </yAxis>
                                                         </LineChart>
-                                                        <StackedBarChart fx:id="customerWithOrderToMonthlyFlowchart" prefHeight="158.0" prefWidth="378.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
+                                                        <LineChart fx:id="orderFlowchart" prefHeight="158.0" prefWidth="378.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>
                                                             <yAxis>
                                                                 <NumberAxis side="LEFT" />
                                                             </yAxis>
-                                                        </StackedBarChart>
+                                                        </LineChart>
                                                     </children>
                                                 </HBox>
                                                 </HBox>
@@ -438,20 +438,20 @@
                                             <children>
                                                 <HBox alignment="CENTER" prefHeight="158.0" prefWidth="714.0" HBox.hgrow="ALWAYS">
                                                     <children>
-                                                        <LineChart fx:id="orderFlowchart" prefHeight="121.0" prefWidth="382.0" title="ChCart1" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
+                                                        <StackedBarChart fx:id="customerWithOrderToMonthlyFlowchart" prefHeight="121.0" prefWidth="382.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>
                                                             <yAxis>
                                                                 <NumberAxis side="LEFT" />
                                                             </yAxis>
-                                                        </LineChart>
-                                                        <StackedBarChart prefHeight="158.0" prefWidth="350.0" title="Chart2" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
+                                                        </StackedBarChart>
+                                                        <StackedBarChart fx:id="statusOrder" prefHeight="158.0" prefWidth="350.0" titleSide="BOTTOM" HBox.hgrow="ALWAYS">
                                                             <xAxis>
-                                                                <CategoryAxis side="BOTTOM" />
+                                                                <CategoryAxis fx:id="xAxisOrder" side="BOTTOM" />
                                                             </xAxis>
                                                             <yAxis>
-                                                                <NumberAxis side="LEFT" />
+                                                                <NumberAxis fx:id="yAxisOrder" side="LEFT" />
                                                             </yAxis>
                                                         </StackedBarChart>
                                                     </children>
