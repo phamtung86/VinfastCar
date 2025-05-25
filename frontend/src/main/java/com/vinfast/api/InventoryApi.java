@@ -142,4 +142,27 @@ public class InventoryApi {
         return -1;
     }
 
+    public List<InventoryDTO> searchInventoryByName(String name) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiConfig.BASE_URL + "/api/v1/inventories/search?name=" + name))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+//                alertNotice.showAlert("Lỗi", "Không thể tải dữ liệu kho top!", Alert.AlertType.ERROR);
+                return List.of();
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<InventoryDTO>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+//            alertNotice.showAlert("Lỗi", "Đã xảy ra lỗi khi tải kho top!", Alert.AlertType.ERROR);
+        }
+        return List.of();
+    }
+
 }

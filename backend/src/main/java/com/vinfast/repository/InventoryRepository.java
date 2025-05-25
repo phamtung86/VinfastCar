@@ -22,5 +22,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @EntityGraph(attributePaths = {"cars"})
     List<Inventory> findAll();
+
+    List<Inventory> findByNameContainingIgnoreCase(String name);
 }
 
