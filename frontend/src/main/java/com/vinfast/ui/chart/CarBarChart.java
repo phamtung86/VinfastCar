@@ -33,8 +33,8 @@ public class CarBarChart extends VBox {
         // Define the axes
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Car Status");
-        yAxis.setLabel("Count");
+        xAxis.setLabel("Trạng thái");
+        yAxis.setLabel("Số lượng");
 
         barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle(chartTitle);

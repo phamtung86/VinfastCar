@@ -57,34 +57,6 @@ public class CustomerController {
         }
     }
 
-    @PostMapping("/{customerId}/orders")
-    public ResponseEntity<CustomerDTO> addOrderToCustomer(@PathVariable Long customerId,
-                                                          @RequestBody OrderDTO orderDTO) {
-        CustomerDTO updatedCustomer = customerService.addOrderToCustomer(customerId, orderDTO);
-        return ResponseEntity.ok(updatedCustomer);
-    }
-
-    @PutMapping("/{customerId}/orders/{orderId}/status")
-    public ResponseEntity<CustomerDTO> updateOrderStatusForCustomer(
-            @PathVariable Long customerId,
-            @PathVariable Long orderId,
-            @RequestBody Map<String, String> statusMap) {
-
-        String newStatus = statusMap.get("status");
-        CustomerDTO updatedCustomer = customerService.updateOrderStatus(customerId, orderId, newStatus);
-        return ResponseEntity.ok(updatedCustomer);
-    }
-
-    @DeleteMapping("/{customerId}/orders/{orderId}")
-    public ResponseEntity<?> deleteOrderFromCustomer(@PathVariable Long customerId, @PathVariable Long orderId) {
-        try {
-            CustomerDTO updatedCustomer = customerService.deleteOrder(customerId, orderId);
-            return ResponseEntity.ok(updatedCustomer);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @GetMapping("/paging")
     public ResponseEntity<?> getCustomersPaging(
             @RequestParam(defaultValue = "0") int page,

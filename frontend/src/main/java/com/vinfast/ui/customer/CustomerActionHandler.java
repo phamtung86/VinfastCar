@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerActionHandler {
-    private static final List<String> paymentOptions = Arrays.asList("Cash", "Bank Transfer", "Credit Card");
-    private static final List<String> statusOptions = Arrays.asList("Chờ xử lý", "Hoàn thành", "Đã hủy");
 
     public static void searchCustomers(String keyword, TableView<CustomerDTO> tableView) {
         new Thread(() -> {
@@ -61,47 +59,28 @@ public class CustomerActionHandler {
         TextField address = new TextField();
         address.setPromptText("Địa chỉ");
 
-        ComboBox<String> paymentMethod = new ComboBox<>(FXCollections.observableArrayList(paymentOptions));
-        paymentMethod.setPromptText("Phương thức thanh toán");
-
-        ComboBox<String> status = new ComboBox<>(FXCollections.observableArrayList(statusOptions));
-        status.setPromptText("Trạng thái");
-
-        TextField idCar = new TextField();
-        idCar.setPromptText("Mã xe");
-
-
-
         VBox vbox = new VBox(
                 8,
                 new Label("Tên khách hàng:"), name,
                 new Label("Số điện thoại:"), phone,
                 new Label("Email:"), email,
-                new Label("Địa chỉ:"), address,
-                new Label("Phương thức thanh toán:"), paymentMethod,
-                new Label("Trạng thái đơn hàng:"), status,
-                new Label("Mã xe:"), idCar
+                new Label("Địa chỉ:"), address
         );
         vbox.setPadding(new Insets(13));
         dialog.getDialogPane().setContent(vbox);
         dialog.setWidth(200);
+
         ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
         Button addButton = (Button) dialog.getDialogPane().lookupButton(addButtonType);
         addButton.addEventFilter(ActionEvent.ACTION, event -> {
-            String payment = paymentMethod.getValue();
-            String stat = status.getValue();
-
             if (!Notifications.validateName(name.getText()) ||
                     !Notifications.validatePhone(phone.getText()) ||
                     Notifications.isPhoneExistOnline(phone.getText()) ||
                     !Notifications.validateEmail(email.getText()) ||
                     Notifications.isEmailExistOnline(email.getText()) ||
-                    !Notifications.validateAddress(address.getText()) ||
-                    !Notifications.validatePaymentMethod(payment) ||
-                    !Notifications.validateStatus(stat) ||
-                    !Notifications.validateCarId(idCar.getText())) {
+                    !Notifications.validateAddress(address.getText())) {
                 event.consume(); // Chặn đóng nếu sai
             }
         });
@@ -113,25 +92,6 @@ public class CustomerActionHandler {
                 customerDTO.setPhone(phone.getText());
                 customerDTO.setEmail(email.getText());
                 customerDTO.setAddress(address.getText());
-
-                OrderDTO orderDTO = new OrderDTO();
-                orderDTO.setPaymentMethod(paymentMethod.getValue());
-                orderDTO.setStatus(status.getValue());
-
-                int carId = Integer.parseInt(idCar.getText());
-                CarDTO carDTO = new CarDTO();
-                carDTO.setId(carId);
-                orderDTO.setCar(carDTO);
-
-                if (carDTO != null) {
-                    long totalAmount = carDTO.getPrice();
-                    orderDTO.setTotalAmount(totalAmount);
-                }
-
-                List<OrderDTO> orders = new ArrayList<>();
-                orders.add(orderDTO);
-                customerDTO.setOrders(orders);
-
                 return customerDTO;
             }
             return null;
@@ -140,6 +100,7 @@ public class CustomerActionHandler {
         Optional<CustomerDTO> result = dialog.showAndWait();
         return result.orElse(null);
     }
+
 
     public static boolean updateCustomer(Long customerId) {
         CustomerDTO selectedCustomer = CustomerApi.getCustomerById(customerId);
@@ -188,13 +149,35 @@ public class CustomerActionHandler {
 
         Button saveButton = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!Notifications.validateName(name.getText()) ||
-                    !Notifications.validatePhone(phone.getText()) ||
-                    Notifications.isPhoneExistOnline(phone.getText()) ||
-                    !Notifications.validateEmail(email.getText()) ||
-                    Notifications.isEmailExistOnline(email.getText()) ||
-                    !Notifications.validateAddress(address.getText())) {
-                event.consume();
+            String newName = name.getText().trim();
+            String newPhone = phone.getText().trim();
+            String newEmail = email.getText().trim();
+            String newAddress = address.getText().trim();
+
+            boolean valid = true;
+
+            if (!Notifications.validateName(newName)) {
+                valid = false;
+            }
+
+            if (!Notifications.validatePhone(newPhone)) {
+                valid = false;
+            } else if (!newPhone.equals(selectedCustomer.getPhone()) && Notifications.isPhoneExistOnline(newPhone)) {
+                valid = false;
+            }
+
+            if (!Notifications.validateEmail(newEmail)) {
+                valid = false;
+            } else if (!newEmail.equals(selectedCustomer.getEmail()) && Notifications.isEmailExistOnline(newEmail)) {
+                valid = false;
+            }
+
+            if (!Notifications.validateAddress(newAddress)) {
+                valid = false;
+            }
+
+            if (!valid) {
+                event.consume(); // Ngăn đóng dialog nếu có lỗi
             }
         });
 
@@ -274,114 +257,4 @@ public class CustomerActionHandler {
         }
     }
 
-    public static OrderDTO addOrder() {
-        Dialog<OrderDTO> dialog = new Dialog<>();
-        dialog.setTitle("Thêm đơn hàng");
-        dialog.setHeaderText("Thêm thông tin đơn hàng mới");
-
-        TextField idCar = new TextField();
-        idCar.setPromptText("Mã xe");
-
-        ComboBox<String> paymentMethod = new ComboBox<>(FXCollections.observableArrayList(paymentOptions));
-        paymentMethod.setPromptText("Phương thức thanh toán");
-
-        ComboBox<String> status = new ComboBox<>(FXCollections.observableArrayList(statusOptions));
-        status.setPromptText("Trạng thái");
-
-        VBox vbox = new VBox(
-                8,
-                new Label("Mã xe:"), idCar,
-                new Label("Phương thức thanh toán:"), paymentMethod,
-                new Label("Trạng thái đơn hàng:"), status
-        );
-        vbox.setPadding(new Insets(13));
-        dialog.getDialogPane().setContent(vbox);
-        dialog.setWidth(200);
-
-        ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
-
-        Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
-        addButton.addEventFilter(ActionEvent.ACTION, event -> {
-            String idCarText = idCar.getText();
-            String payment = paymentMethod.getValue();
-            String stat = status.getValue();
-
-            if (!Notifications.validateCarId(idCarText) ||
-                    !Notifications.validatePaymentMethod(payment) ||
-                    !Notifications.validateStatus(stat)) {
-                event.consume();
-            }
-        });
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == addButtonType) {
-                try {
-                    OrderDTO order = new OrderDTO();
-                    CarDTO car = new CarDTO();
-                    car.setId(Integer.parseInt(idCar.getText()));
-                    order.setCar(car);
-                    order.setPaymentMethod(paymentMethod.getValue());
-                    order.setStatus(status.getValue());
-                    return order;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-            return null;
-        });
-
-        Optional<OrderDTO> result = dialog.showAndWait();
-        return result.orElse(null);
-    }
-
-    public static Optional<String> updateOrderStatus(OrderDTO order) {
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Cập nhật trạng thái đơn hàng");
-        dialog.setHeaderText("Cập nhật trạng thái đơn hàng ID: " + (order.getId() != null ? order.getId() : ""));
-
-        ComboBox<String> statusComboBox = new ComboBox<>(FXCollections.observableArrayList(statusOptions));
-        statusComboBox.setValue(order.getStatus());
-
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(15));
-        statusComboBox.setMaxWidth(Double.MAX_VALUE);
-        vbox.getChildren().addAll(new Label("Trạng thái:"), statusComboBox);
-
-        dialog.getDialogPane().setContent(vbox);
-
-        ButtonType updateButtonType = new ButtonType("Cập nhật", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
-
-        Node updateButton = dialog.getDialogPane().lookupButton(updateButtonType);
-        updateButton.addEventFilter(ActionEvent.ACTION, event -> {
-            if (statusComboBox.getValue() == null || statusComboBox.getValue().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn trạng thái.");
-                alert.showAndWait();
-                event.consume();
-            }
-        });
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == updateButtonType) {
-                return statusComboBox.getValue();
-            }
-            return null;
-        });
-
-        return dialog.showAndWait();
-    }
-
-    public static boolean deleteOrder(Long customerId, OrderDTO orderToDelete) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Xác nhận");
-        confirm.setHeaderText("Bạn có chắc chắn muốn xóa đơn hàng?");
-        confirm.setContentText("Đơn hàng ID: " + orderToDelete.getId());
-
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            return CustomerApi.deleteOrder(customerId, orderToDelete.getId());
-        }
-        return false;
-    }
 }
