@@ -7,6 +7,7 @@ module com.vinfast.fe {
     requires java.desktop;
     requires kernel;
     requires layout;
+    requires io;
 
     opens com.vinfast to javafx.graphics, javafx.fxml;
     exports com.vinfast;

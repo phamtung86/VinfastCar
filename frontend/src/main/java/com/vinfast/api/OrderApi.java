@@ -144,6 +144,26 @@ public class OrderApi {
             e.printStackTrace();
         }
     }
+    public static List<OrderDTO> searchOrdersByCustomerName(String name) throws IOException, InterruptedException {
+        String url = ApiConfig.BASE_URL + "/api/v1/orders/search?name=" + java.net.URLEncoder.encode(name, "UTF-8");
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = ApiConfig.getClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), new TypeReference<List<OrderDTO>>() {});
+        } else if (response.statusCode() == 404) {
+            // Không tìm thấy kết quả
+            return List.of();
+        } else {
+            throw new IOException("Error when searching orders: " + response.statusCode() + " " + response.body());
+        }
+    }
 
 
 }

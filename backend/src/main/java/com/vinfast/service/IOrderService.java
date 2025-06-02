@@ -25,4 +25,7 @@ public interface IOrderService {
     boolean updateOrder(OrderDTO orderDTO);
     Long getRevenue();
     List<OrderChartDTO> getOrderbyStatus();
+    public void updateOrderStatus(Long id, String newStatus);
+    List<OrderDTO> searchOrdersByCustomerName(String name);
+
 }
