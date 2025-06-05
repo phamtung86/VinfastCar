@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,29 @@ public class OrderController {
     public ResponseEntity<List<OrderChartDTO>> getOrderCountByStatus() {
         return ResponseEntity.ok(orderService.getOrderbyStatus());
     }
+    @PutMapping("/{id}/status")
+    public ResponseEntity<String> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestBody String newStatus
+    ) {
+        try {
+            // Xử lý chuỗi từ JSON đơn giản (xóa dấu ngoặc kép nếu có)
+            newStatus = newStatus.replace("\"", "");
+
+            orderService.updateOrderStatus(id, newStatus);
+            return ResponseEntity.ok("Trạng thái đã được cập nhật");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi server");
+        }
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<OrderDTO>> searchOrderByName(@RequestParam String name) {
+        List<OrderDTO> orderDTOS = orderService.searchOrdersByCustomerName(name);
+        return orderDTOS.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(orderDTOS);
+    }
+
 
 }
 

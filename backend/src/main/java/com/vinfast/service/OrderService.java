@@ -119,6 +119,28 @@ public class OrderService implements IOrderService {
                 .map(obj -> new OrderChartDTO((String) obj[0], (Long) obj[1]))
                 .collect(Collectors.toList());
     }
+    @Override
+    public void updateOrderStatus(Long id, String newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng với ID: " + id));
 
+        // Cắt khoảng trắng đầu/cuối chuỗi
+        newStatus = newStatus.trim();
+
+        // Kiểm tra trạng thái hợp lệ
+        List<String> allowedStatuses = List.of("Pending", "Processing", "Completed");
+        if (!allowedStatuses.contains(newStatus)) {
+            throw new IllegalArgumentException("Trạng thái không hợp lệ: " + newStatus);
+        }
+
+        order.setStatus(newStatus);
+        orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderDTO> searchOrdersByCustomerName(String name) {
+        List<Order> orders = orderRepository.findByCustomerNameContainingIgnoreCase(name);
+        return modelMapper.map(orders, new TypeToken<List<OrderDTO>>(){}.getType());
+    }
 
 }

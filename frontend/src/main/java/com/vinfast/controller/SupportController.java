@@ -1,10 +1,9 @@
 package com.vinfast.controller;
 
-import com.vinfast.api.CarApi;
+import com.itextpdf.layout.properties.TextAlignment;
 import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
 import com.vinfast.dto.OrderDTO;
-import com.vinfast.model.CarPageResponse;
 import com.vinfast.model.OrderPageResponse;
 import com.vinfast.ui.car.CarActionHandler;
 import com.vinfast.ui.order.OrderActionHandler;
@@ -58,21 +57,58 @@ public class SupportController implements Initializable {
     private Button btnNext;
 
     private int currentPage = 1;
-    private final int pageSize = 10;
+    private final int pageSize = 20;
     private long totalCars = 0;
     private boolean isLastPage = false;
     private boolean isFirstPage = true;
 
     private OrderActionHandler orderActionHandler;
     private OrderApi orderApi;
+    @FXML
+    private TextField searchBox;
+    private boolean isSreaching = false;
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         orderActionHandler = new OrderActionHandler(orderTable, this::updateTableData);
         orderApi = new OrderApi();
-        loadDataFormApi();
         setDataIntoTableView();
+        loadDataFormApi();
+        searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                isSreaching = false;
+                currentPage = 1;
+                // Nếu searchBox rỗng thì load dữ liệu toàn bộ theo trang
+                loadDataFormApi();
+            } else {
+                isSreaching = true;
+                currentPage = 1;
+                // Gọi API tìm kiếm theo tên khách hàng
+                searchOrdersByCustomerName(newValue);
+            }
+        });
     }
+    private void searchOrdersByCustomerName(String name) {
+        new Thread(() -> {
+            try {
+                List<OrderDTO> orders = orderApi.searchOrdersByCustomerName(name);
+                Platform.runLater(() -> {
+                    if (orders == null || orders.isEmpty()) {
+                        orderTable.getItems().clear();
+                        showAlert("Thông báo", "Không tìm thấy đơn hàng nào với tên khách hàng: " + name);
+                    } else {
+                        orderTable.setItems(FXCollections.observableArrayList(orders));
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showAlert("Lỗi", "Lỗi khi gọi API tìm kiếm: " + e.getMessage()));
+            }
+        }).start();
+    }
+
     private void loadDataFormApi() {
         new Thread(() -> {
             try {
@@ -144,7 +180,46 @@ public class SupportController implements Initializable {
         });
 
         createAt.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        status.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+        status.setCellFactory(column -> new TableCell<>() {
+            private final ComboBox<String> comboBox = new ComboBox<>();
+
+            {
+                comboBox.getItems().addAll("Pending", "Processing", "Completed");
+                comboBox.setOnAction(event -> {
+                    OrderDTO order = getTableView().getItems().get(getIndex());
+                    String newStatus = comboBox.getValue();
+
+                    // Nếu giống trạng thái cũ thì không làm gì
+                    if (newStatus.equals(order.getStatus())) return;
+
+                    // Xác nhận
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Xác nhận thay đổi trạng thái");
+                    confirm.setHeaderText("Bạn có chắc muốn đổi trạng thái đơn hàng?");
+                    confirm.setContentText("Từ: " + order.getStatus() + " -> " + newStatus);
+
+                    confirm.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            updateOrderStatus(order, newStatus);
+                        } else {
+                            comboBox.setValue(order.getStatus()); // Reset lại nếu không xác nhận
+                        }
+                    });
+                });
+            }
+
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    comboBox.setValue(status);
+                    setGraphic(comboBox);
+                }
+            }
+        });
 
         // Cột hành động
         action.setCellFactory(col -> new TableCell<>() {
@@ -243,33 +318,55 @@ public class SupportController implements Initializable {
 
     private void handleExportPDF(OrderDTO order) {
         try {
-            // Tạo thư mục nếu chưa tồn tại
-            String folderPath = System.getProperty("user.dir") + "/invoicePDF"; // Lưu trong thư mục gốc của dự án
+            String folderPath = System.getProperty("user.dir") + "/invoicePDF";
             File folder = new File(folderPath);
             if (!folder.exists()) {
-                folder.mkdirs();  // Tạo thư mục nếu chưa có
+                folder.mkdirs();
             }
 
-            // Đặt tên file PDF
             String fileName = "order_" + order.getId() + ".pdf";
             File pdfFile = new File(folderPath + "/" + fileName);
 
-            // Viết dữ liệu vào file PDF
+            // Dùng font Unicode để hỗ trợ tiếng Việt
+
             PdfWriter writer = new PdfWriter(pdfFile);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
-
-            document.add(new Paragraph("HÓA ĐƠN HÀNG").setBold().setFontSize(20));
-            document.add(new Paragraph("ID Đơn hàng: " + order.getId()));
+            document.add(new Paragraph("HÓA ĐƠN ĐẶT XE").setFontSize(20).setBold().setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Mã đơn hàng: " + order.getId()));
             document.add(new Paragraph("Khách hàng: " + order.getCustomerName() + " (ID: " + order.getCustomerId() + ")"));
-            document.add(new Paragraph("Tên xe: " + (order.getCar() != null ? order.getCar().getName() : "Không rõ")));
+            document.add(new Paragraph("Ngày đặt: " + order.getOrderDate()));
+            document.add(new Paragraph("Trạng thái đơn hàng: " + order.getStatus()));
             document.add(new Paragraph("Tổng tiền: " + FormatUtils.formatPrice(order.getTotalAmount())));
-            document.add(new Paragraph("Ngày tạo: " + order.getOrderDate()));
-            document.add(new Paragraph("Trạng thái: " + order.getStatus()));
+            document.add(new Paragraph(" "));
+
+            if (order.getCar() != null) {
+                CarDTO car = order.getCar();
+                document.add(new Paragraph("THÔNG TIN CHI TIẾT XE").setFontSize(16).setBold());
+
+                document.add(new Paragraph("Tên xe: " + car.getName()));
+                document.add(new Paragraph("Năm sản xuất: " + car.getYear()));
+                document.add(new Paragraph("Số km đã đi (ODO): " + car.getOdo() + " km"));
+                document.add(new Paragraph("Xuất xứ: " + car.getOriginal()));
+                document.add(new Paragraph("Phong cách: " + car.getStyle()));
+                document.add(new Paragraph("Hộp số: " + car.getGear()));
+                document.add(new Paragraph("Động cơ: " + car.getEngine()));
+                document.add(new Paragraph("Màu ngoại thất: " + car.getColorOut()));
+                document.add(new Paragraph("Màu nội thất: " + car.getColorIn()));
+                document.add(new Paragraph("Số chỗ ngồi: " + car.getSlotSeats()));
+                document.add(new Paragraph("Số cửa: " + car.getSlotDoor()));
+                document.add(new Paragraph("Hệ dẫn động: " + car.getDriveTrain()));
+                document.add(new Paragraph("Tình trạng xe: " + car.getStatus()));
+                document.add(new Paragraph("Trạng thái trong kho: " + car.getCarStatus()));
+                document.add(new Paragraph("Kho xe: " + car.getInventoryName() + " (ID: " + car.getInventoryId() + ")"));
+                document.add(new Paragraph("Giá: " + FormatUtils.formatPrice(car.getPrice())));
+            } else {
+                document.add(new Paragraph("Không có thông tin xe."));
+            }
 
             document.close();
 
-            // Thông báo thành công
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Xuất PDF");
             alert.setHeaderText("Xuất hóa đơn thành công!");
@@ -285,6 +382,7 @@ public class SupportController implements Initializable {
             alert.showAndWait();
         }
     }
+
 
 
     // Xử lý sửa
@@ -305,4 +403,39 @@ public class SupportController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void updateOrderStatus(OrderDTO order, String newStatus) {
+        new Thread(() -> {
+            try {
+                String url = "http://localhost:8080/api/v1/orders/" + order.getId() + "/status";
+                java.net.HttpURLConnection connection = (java.net.HttpURLConnection)
+                        new java.net.URL(url).openConnection();
+
+                connection.setRequestMethod("PUT");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+
+                String jsonBody = String.format("\"%s\"", newStatus);
+                try (java.io.OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = connection.getResponseCode();
+                Platform.runLater(() -> {
+                    if (responseCode == 200) {
+                        showAlert("Thành công", "Cập nhật trạng thái thành công.");
+                        loadDataFormApi();
+                    } else {
+                        showAlert("Lỗi", "Không thể cập nhật trạng thái. Mã lỗi: " + responseCode);
+                    }
+                });
+
+                connection.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showAlert("Lỗi", "Lỗi khi gửi yêu cầu cập nhật trạng thái:\n" + e.getMessage()));
+            }
+        }).start();
+    }
+
 }

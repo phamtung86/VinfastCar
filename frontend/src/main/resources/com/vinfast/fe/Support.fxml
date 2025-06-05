@@ -27,7 +27,7 @@
                            <image>
                               <Image url="@image/search.png" />
                            </image></ImageView>
-                        <TextField prefHeight="25.0" prefWidth="265.0" styleClass="transparent" stylesheets="@style/Dashboard.css" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="searchBox" prefHeight="25.0" prefWidth="265.0" styleClass="transparent" stylesheets="@style/Dashboard.css" HBox.hgrow="ALWAYS" />
                      </children>
                      <HBox.margin>
                         <Insets />

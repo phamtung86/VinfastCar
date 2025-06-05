@@ -1,6 +1,7 @@
 package com.vinfast.repository;
 
 import com.vinfast.entity.Car;
+import com.vinfast.entity.Customer;
 import com.vinfast.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "FROM Order o " +
             "GROUP BY o.status")
     List<Object[]> countOrdersByStatus();
-
-
-
+    List<Order> findByCustomerNameContainingIgnoreCase(String name);
 }
