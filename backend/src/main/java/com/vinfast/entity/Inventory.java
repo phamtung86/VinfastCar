@@ -17,7 +17,7 @@ public class Inventory {
 
     @OneToMany( mappedBy = "inventory",fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
-    private List<Car> cars;
+    private List<Inventory> inventories;
 
     private int capacity;
 
@@ -38,8 +38,8 @@ public class Inventory {
         return name;
     }
 
-    public List<Car> getCars() {
-        return cars;
+    public List<Inventory> getInventories() {
+        return inventories;
     }
 
     public String getLocation() {
@@ -54,8 +54,8 @@ public class Inventory {
         this.name = name;
     }
 
-    public void setCars(List<Car> cars) {
-        this.cars = cars;
+    public void setInventories(List<Inventory> inventories) {
+        this.inventories = inventories;
     }
 
     public void setCapacity(int capacity) {

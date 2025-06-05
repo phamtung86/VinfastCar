@@ -70,19 +70,35 @@ public class InventoryActionHandler {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
+                String name = nameField.getText().trim();
+                String location = locationField.getText().trim();
+                String capacityText = capacityField.getText().trim();
+
+                if (name.isEmpty() || location.isEmpty() || capacityText.isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Thiếu thông tin");
+                    alert.setHeaderText("Vui lòng điền đầy đủ thông tin trước khi thêm kho.");
+                    alert.showAndWait();
+                    return null;
+                }
+
                 try {
+                    int capacity = Integer.parseInt(capacityText);
+
                     InventoryDTO newInventory = new InventoryDTO();
-                    newInventory.setId((long)0);
-                    newInventory.setName(nameField.getText());
-                    newInventory.setLocation(locationField.getText());
-                    newInventory.setCapacity((Integer.parseInt(capacityField.getText())));
+                    newInventory.setId(0L);
+                    newInventory.setName(name);
+                    newInventory.setLocation(location);
+                    newInventory.setCapacity(capacity);
+
                     return newInventory;
+
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Lỗi nhập liệu");
-                    alert.setHeaderText("Vui lòng nhập đúng định dạng số trong các trường Odo, Năm, Giá.");
+                    alert.setHeaderText("Trường Sức chứa phải là số nguyên hợp lệ.");
                     alert.showAndWait();
-                    System.out.println(e);
+                    return null;
                 }
             }
             return null;
