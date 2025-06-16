@@ -1,5 +1,9 @@
 package com.vinfast.controller;
 
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.util.StreamUtil;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.vinfast.api.OrderApi;
 import com.vinfast.dto.CarDTO;
@@ -23,14 +27,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class SupportController implements Initializable {
-
+    @FXML
+    TableColumn<OrderDTO, String> paymentMethodCol;
     @FXML
     private TableView<OrderDTO> orderTable;
     @FXML
@@ -97,7 +104,7 @@ public class SupportController implements Initializable {
                 Platform.runLater(() -> {
                     if (orders == null || orders.isEmpty()) {
                         orderTable.getItems().clear();
-                        showAlert("Thông báo", "Không tìm thấy đơn hàng nào với tên khách hàng: " + name);
+//                        showAlert("Thông báo", "Không tìm thấy đơn hàng nào với tên khách hàng: " + name);
                     } else {
                         orderTable.setItems(FXCollections.observableArrayList(orders));
                     }
@@ -260,6 +267,8 @@ public class SupportController implements Initializable {
                 }
             }
         });
+        paymentMethodCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPaymentMethod()));
     }
 
     private void handleCancel(OrderDTO order) {
@@ -267,7 +276,6 @@ public class SupportController implements Initializable {
         confirm.setTitle("Xác nhận hủy đơn hàng");
         confirm.setHeaderText("Bạn có chắc muốn hủy đơn hàng?");
         confirm.setContentText("ID: " + order.getId());
-
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 new Thread(() -> {
@@ -327,13 +335,25 @@ public class SupportController implements Initializable {
             String fileName = "order_" + order.getId() + ".pdf";
             File pdfFile = new File(folderPath + "/" + fileName);
 
+
             // Dùng font Unicode để hỗ trợ tiếng Việt
 
             PdfWriter writer = new PdfWriter(pdfFile);
             PdfDocument pdf = new PdfDocument(writer);
+// Đọc font từ resource
+            InputStream fontStream = getClass().getResourceAsStream("/com/vinfast/fe/style/arial.ttf");
+            if (fontStream == null) {
+                throw new FileNotFoundException("Font not found in resources");
+            }
+            PdfFont font = PdfFontFactory.createFont(
+                    StreamUtil.inputStreamToArray(fontStream),
+                    PdfEncodings.IDENTITY_H
+            );
+
             Document document = new Document(pdf);
+            document.setFont(font);
             document.add(new Paragraph("HÓA ĐƠN ĐẶT XE").setFontSize(20).setBold().setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph(" "));
+            document.add(new Paragraph("===================================================== ").setTextAlignment(TextAlignment.CENTER));
             document.add(new Paragraph("Mã đơn hàng: " + order.getId()));
             document.add(new Paragraph("Khách hàng: " + order.getCustomerName() + " (ID: " + order.getCustomerId() + ")"));
             document.add(new Paragraph("Ngày đặt: " + order.getOrderDate()));
@@ -343,8 +363,8 @@ public class SupportController implements Initializable {
 
             if (order.getCar() != null) {
                 CarDTO car = order.getCar();
-                document.add(new Paragraph("THÔNG TIN CHI TIẾT XE").setFontSize(16).setBold());
-
+                document.add(new Paragraph("THÔNG TIN CHI TIẾT XE").setFontSize(16).setBold().setTextAlignment(TextAlignment.CENTER));
+                document.add(new Paragraph("===================================================== ").setTextAlignment(TextAlignment.CENTER));
                 document.add(new Paragraph("Tên xe: " + car.getName()));
                 document.add(new Paragraph("Năm sản xuất: " + car.getYear()));
                 document.add(new Paragraph("Số km đã đi (ODO): " + car.getOdo() + " km"));

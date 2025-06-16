@@ -60,7 +60,8 @@
                   <TableColumn fx:id="inforCar" prefWidth="65.19998168945312" text="Tên xe" />
                   <TableColumn fx:id="totalAmount" prefWidth="75.0" text="Tổng tiền" />
                   <TableColumn fx:id="createAt" prefWidth="75.0" text="Ngày tạo" />
-                  <TableColumn fx:id="status" prefWidth="75.0" text="Trạng thái" />
+                 <TableColumn fx:id="paymentMethodCol" prefWidth="75.0" text="Phương thức thanh toán"/>
+                 <TableColumn fx:id="status" prefWidth="75.0" text="Trạng thái" />
                   <TableColumn fx:id="action" text="Hành động" />
               </columns>
                <columnResizePolicy>
